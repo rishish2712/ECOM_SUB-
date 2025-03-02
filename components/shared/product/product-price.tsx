@@ -1,100 +1,77 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import React from 'react'
+'use client'
+import { cn, formatCurrency } from '@/lib/utils'
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { IProduct } from '@/lib/db/models/product.model'
-
-import Rating from './rating'
-import { formatNumber } from '@/lib/utils'
-import ProductPrice from './product-price'
-
-const ProductCard = ({
-  product,
-  hideBorder = false,
-  hideDetails = false,
+const ProductPrice = ({
+  price,
+  className,
+  listPrice = 0,
+  isDeal = false,
+  forListing = true,
+  plain = false,
 }: {
-  product: IProduct
-  hideDetails?: boolean
-  hideBorder?: boolean
-  hideAddToCart?: boolean
+  price: number
+  isDeal?: boolean
+  listPrice?: number
+  className?: string
+  forListing?: boolean
+  plain?: boolean
 }) => {
-  const ProductImage = () => (
-    <Link href={`/product/${product.slug}`}>
-      <div className='relative h-52'>
-        {product.images.length > 1 ? (
-          <ImageHover
-            src={product.images[0]}
-            hoverSrc={product.images[1]}
-            alt={product.name}
-          />
-        ) : (
-          <div className='relative h-52'>
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              sizes='80vw'
-              className='object-contain'
-            />
-          </div>
-        )}
-      </div>
-    </Link>
-  )
-  const ProductDetails = () => (
-    <div className='flex-1 space-y-2'>
-      <p className='font-bold'>{product.brand}</p>
-      <Link
-        href={`/product/${product.slug}`}
-        className='overflow-hidden text-ellipsis'
-        style={{
-          display: '-webkit-box',
-          WebkitLineClamp: 2,
-          WebkitBoxOrient: 'vertical',
-        }}
-      >
-        {product.name}
-      </Link>
-      <div className='flex gap-2 justify-center'>
-        <Rating rating={product.avgRating} />
-        <span>({formatNumber(product.numReviews)})</span>
-      </div>
+  const discountPercent = Math.round(100 - (price / listPrice) * 100)
+  const stringValue = price.toString()
+  const [intValue, floatValue] = stringValue.includes('.')
+    ? stringValue.split('.')
+    : [stringValue, '']
 
-      <ProductPrice
-        isDeal={product.tags.includes('todays-deal')}
-        price={product.price}
-        listPrice={product.listPrice}
-        forListing
-      />
+  return plain ? (
+    formatCurrency(price)
+  ) : listPrice == 0 ? (
+    <div className={cn('text-3xl', className)}>
+      <span className='text-xs align-super'>$</span>
+      {intValue}
+      <span className='text-xs align-super'>{floatValue}</span>
     </div>
-  )
-
-  return hideBorder ? (
-    <div className='flex flex-col'>
-      <ProductImage />
-      {!hideDetails && (
-        <>
-          <div className='p-3 flex-1 text-center'>
-            <ProductDetails />
-          </div>
-        </>
-      )}
+  ) : isDeal ? (
+    <div className='space-y-2'>
+      <div className='flex justify-center items-center gap-2'>
+        <span className='bg-red-700 rounded-sm p-1 text-white text-sm font-semibold'>
+          {discountPercent}% Off
+        </span>
+        <span className='text-red-700 text-xs font-bold'>
+          Limited time deal
+        </span>
+      </div>
+      <div
+        className={`flex ${
+          forListing && 'justify-center'
+        } items-center gap-2`}
+      >
+        <div className={cn('text-3xl', className)}>
+          <span className='text-xs align-super'>$</span>
+          {intValue}
+          <span className='text-xs align-super'>{floatValue}</span>
+        </div>
+        <div className='text-muted-foreground text-xs py-2'>
+          Was:{' '}
+          <span className='line-through'>{formatCurrency(listPrice)}</span>
+        </div>
+      </div>
     </div>
   ) : (
-    <Card className='flex flex-col  '>
-      <CardHeader className='p-3'>
-        <ProductImage />
-      </CardHeader>
-      {!hideDetails && (
-        <>
-          <CardContent className='p-3 flex-1  text-center'>
-            <ProductDetails />
-          </CardContent>
-        </>
-      )}
-    </Card>
+    <div className=''>
+      <div className='flex justify-center gap-3'>
+        <div className='text-3xl text-orange-700'>-{discountPercent}%</div>
+        <div className={cn('text-3xl', className)}>
+          <span className='text-xs align-super'>$</span>
+          {intValue}
+          <span className='text-xs align-super'>{floatValue}</span>
+        </div>
+      </div>
+      <div className='text-muted-foreground text-xs py-2'>
+        List price:{' '}
+        <span className='line-through'>{formatCurrency(listPrice)}</span>
+      </div>
+    </div>
   )
 }
 
-export default ProductCard
+export default ProductPrice

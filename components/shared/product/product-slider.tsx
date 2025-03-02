@@ -1,5 +1,5 @@
 'use client'
-import ProductCard from './product-card'
+
 import * as React from 'react'
 import {
   Carousel,
@@ -8,7 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-// import ProductCard from './product-card'
+import ProductCard from './product-card'
 import { IProduct } from '@/lib/db/models/product.model'
 
 export default function ProductSlider({

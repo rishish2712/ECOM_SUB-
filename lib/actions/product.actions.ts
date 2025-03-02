@@ -1,7 +1,6 @@
 import { connectToDatabase } from "../db";
 import Product, { IProduct } from '@/lib/db/models/product.model'
-import { ProductInputSchema } from '../validator'
-import { IProductInput } from '@/types'
+
 
 export async function getAllCategories() {
     await connectToDatabase();
