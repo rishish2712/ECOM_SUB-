@@ -9,6 +9,31 @@ export async function getAllCategories() {
     return categories;
 }
 
+export async function getProductsForCard({
+  tag,
+  limit = 4,
+}: {
+  tag: string
+  limit?: number
+}) {
+  await connectToDatabase()
+  const products = await Product.find(
+    { tags: { $in: [tag] }, isPublished: true },
+    {
+      name: 1,
+      href: { $concat: ['/product/', '$slug'] },
+      image: { $arrayElemAt: ['$images', 0] },
+    }
+  )
+    .sort({ createdAt: 'desc' })
+    .limit(limit)
+  return JSON.parse(JSON.stringify(products)) as {
+    name: string
+    href: string
+    image: string
+  }[]
+}
+
 export async function getProductBySlug(slug : string) {
     await connectToDatabase();
     const product = await Product.findOne({slug, isPublished : true})
