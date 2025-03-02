@@ -1,6 +1,6 @@
 import {z} from 'zod'
 
-import { UserSignInSchema,UserInputSchema } from "@/lib/validator";
+import { ProductInputSchema, ReviewInputSchema, UserSignInSchema, UserInputSchema, OrderItemSchema, CartSchema } from "@/lib/validator";
 
 export type IProductInput = z.infer<typeof ProductInputSchema>
 
@@ -21,8 +21,8 @@ export type Dta = {
 
 
 
-
-export type OrderItem = z.infer<typesof OrderItemSchema>
+// ORDER AND CART
+export type OrderItem = z.infer<typeof OrderItemSchema>
 export type Cart = z.infer<typeof CartSchema>
 
 
