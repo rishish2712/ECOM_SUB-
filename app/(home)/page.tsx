@@ -1,7 +1,20 @@
-export default async function Page() {
-  return (
-    <div>
-      <h1 className='h1-bold text-center p-10'>Home Page Content</h1>
-    </div>
-  )
+"use client";
+
+import React, { useState, useEffect } from "react";
+
+export default function Home() {
+    useEffect(() => {
+        fetch("/api/home")
+            .then(res => res.json())
+            .then(data => {
+              console.log(data)
+              setMessage(data);
+            });
+    }, []);
+    const [message, setMessage] = useState("Loading");
+
+    return <div>
+      <h1>Home</h1>
+      <p>{message}</p>
+    </div>;
 }
