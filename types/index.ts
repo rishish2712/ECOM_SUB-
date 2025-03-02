@@ -4,7 +4,7 @@ import { ProductInputSchema, ReviewInputSchema, UserSignInSchema, UserInputSchem
 
 export type IProductInput = z.infer<typeof ProductInputSchema>
 
-export type Dta = {
+export type Data = {
     product: IProductInput[]
     headerMenus:{
         name: string
