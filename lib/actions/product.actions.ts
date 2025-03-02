@@ -1,15 +1,12 @@
-'use server'
-
-import { connectToDatabase } from '@/lib/db'
-import Product, {IProduct} from '@/lib/db/models/product.model'
+import { connectToDatabase } from "../db";
+import Product, { IProduct } from '@/lib/db/models/product.model'
 
 export async function getAllCategories() {
-  await connectToDatabase()
-  const categories = await Product.find({ isPublished: true }).distinct(
-    'category'
-  )
-  return categories
+    await connectToDatabase();
+    const categories = await Product.find({isPublished : true}).distinct('category');
+    return categories;
 }
+
 export async function getProductsForCard({
   tag,
   limit = 4,
