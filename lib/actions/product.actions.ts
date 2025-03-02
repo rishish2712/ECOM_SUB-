@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 'use server'
 
 import { connectToDatabase } from '@/lib/db'
-import Product from '@/lib/db/models/product.model'
+import Product, {IProduct} from '@/lib/db/models/product.model'
 
 export async function getAllCategories() {
   await connectToDatabase()
@@ -34,14 +33,11 @@ export async function getProductsForCard({
     href: string
     image: string
   }[]
-=======
-import { connectToDatabase } from "../db";
-import Product, { IProduct } from '@/lib/db/models/product.model'
+}
 
 export async function getProductBySlug(slug : string) {
     await connectToDatabase();
     const product = await Product.findOne({slug, isPublished : true})
     if(!product) throw new Error('Product not found');
     return JSON.parse(JSON.stringify(product)) as IProduct;
->>>>>>> 1b8421a75b224080cbc3a933efbc03d7d63630e9
 }
