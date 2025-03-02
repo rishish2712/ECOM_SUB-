@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+<<<<<<< HEAD
 
 
 
@@ -25,6 +26,16 @@ export const formatNumberWithDecimal = (num: number): string => {
   return decimal ? `${int}.${decimal.padEnd(2, '0')}` : int
 }
 // PROMPT: [ChatGTP] create toSlug ts arrow function that convert text to lowercase, remove non-word, non-whitespace, non-hyphen characters, replace whitespace, trim leading hyphens and trim trailing hyphens
+=======
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+
+export const formatNumberWithDecimal = (num : number) : string => {
+  const [int, decimal] = num.toString().split('.')
+  return decimal ? `${int}.${decimal.padEnd(2,'0')}` : int
+}
+>>>>>>> 1b8421a75b224080cbc3a933efbc03d7d63630e9
 
 export const toSlug = (text: string): string =>
   text
@@ -32,4 +43,8 @@ export const toSlug = (text: string): string =>
     .replace(/[^\w\s-]+/g, '')
     .replace(/\s+/g, '-')
     .replace(/^-+|-+$/g, '')
+<<<<<<< HEAD
 
+=======
+    .replace(/-+/g, '-')
+>>>>>>> 1b8421a75b224080cbc3a933efbc03d7d63630e9

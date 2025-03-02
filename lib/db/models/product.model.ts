@@ -1,4 +1,5 @@
 import { Document, Model, model, models, Schema } from 'mongoose'
+<<<<<<< HEAD
 import { IProductInput } from '@/types'
 
 export interface IProduct extends Document, IProductInput {
@@ -96,3 +97,6 @@ const Product =
   model<IProduct>('Product', productSchema)
 
 export default Product
+=======
+
+>>>>>>> 1b8421a75b224080cbc3a933efbc03d7d63630e9
