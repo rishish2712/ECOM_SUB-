@@ -9,10 +9,10 @@ import {
   getProductsByTag,
   getProductsForCard,
 } from '@/lib/actions/product.actions'
+import BrowsingHistoryList from '@/components/shared/browsing-history-list'
 
 
 export default async function HomePage() {
-  const todaysDeals = await getProductsByTag({ tag: 'todays-deal' })
   const categories = (await getAllCategories()).slice(0, 4)
   const newArrivals = await getProductsForCard({
     tag: 'new-arrival',
@@ -65,7 +65,9 @@ export default async function HomePage() {
     },
   ]
   // const todaysDeals = await getProductsByTag({ tag: 'todays-deal' })
-
+  const bestSellingProducts = await getProductsByTag({ tag: 'best-seller' })
+  const todaysDeals = await getProductsByTag({ tag: 'todays-deal' })
+  
   return (
     <>
       <HomeCarousel items={data.carousels} />
@@ -76,6 +78,18 @@ export default async function HomePage() {
             <ProductSlider title={"Today's Deals"} products={todaysDeals} />
           </CardContent>
         </Card>
+        <Card className='w-full rounded-none'>
+    <CardContent className='p-4 items-center gap-3'>
+      <ProductSlider
+        title='Best Selling Products'
+        products={bestSellingProducts}
+        hideDetails
+      />
+    </CardContent>
+  </Card>
+      </div>
+      <div className='p-4 bg-background'>
+        <BrowsingHistoryList />
       </div>
     </>
   )
