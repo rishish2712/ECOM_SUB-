@@ -5,6 +5,8 @@ import CartSidebar from './cart-sidebar'
 import { Toaster } from 'sonner'
 
 
+
+
 export default function ClientProviders({
   children,
 }: {

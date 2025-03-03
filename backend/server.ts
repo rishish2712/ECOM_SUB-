@@ -11,8 +11,8 @@ const PORT = 8080;
 app.use(cors());
 app.use(express.json());
 
-app.get("/api/", (req,res) => {
-    res.json({message : "Server Response"});
+app.get("/api/", (_req: any, res: { json: (arg0: { message: string; }) => void; }) => {
+    res.json({ message: "Server Response" });
 })
 
 app.listen(PORT, () => {

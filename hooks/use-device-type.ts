@@ -1,20 +1,22 @@
 import { useState, useEffect } from 'react'
 
 function useDeviceType() {
-  const [deviceType, setDeviceType] = useState('unknown')
 
-  useEffect(() => {
-    const handleResize = () => {
-      setDeviceType(window.innerWidth <= 768 ? 'mobile' : 'desktop')
-    }
+    const [deviceType, setDeviceType] = useState('unknown')
 
-    handleResize() // Set initial value
-    window.addEventListener('resize', handleResize)
+    useEffect(() => {
+        const handleResize = () => {
+            setDeviceType(window.innerWidth <= 768 ? 'mobile' : 'desktop')
+        }
 
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+        handleResize() // Set initial value
+        window.addEventListener('resize', handleResize)
 
-  return deviceType
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
+    return deviceType
+
 }
 
 export default useDeviceType

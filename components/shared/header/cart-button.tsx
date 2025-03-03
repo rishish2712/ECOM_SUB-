@@ -6,8 +6,6 @@ import useIsMounted from '@/hooks/use-is-mounted'
 import { cn } from '@/lib/utils'
 import useCartStore from '@/hooks/use-cart-store'
 import useCartSidebar from '@/hooks/use-cart-sidebar'
-
-
 export default function CartButton() {
   const isMounted = useIsMounted()
   const {

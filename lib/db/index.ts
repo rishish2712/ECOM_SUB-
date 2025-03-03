@@ -20,7 +20,7 @@ export const connectToDatabase = async (
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = "mongodb+srv://ujeshadmin:J.NpX9m53.qkMmw@cluster0.bdtpf.mongodb.net/ujeshdata?retryWrites=true&w=majority&appName=Cluster0";
 
 if (!MONGODB_URI) {
   throw new Error("MONGODB_URI is missing");
