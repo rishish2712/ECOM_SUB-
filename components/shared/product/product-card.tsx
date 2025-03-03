@@ -100,7 +100,7 @@ const ProductCard = ({
             <ProductDetails />
           </div>
         </>
-      )}
+      )
     </div>
   ) : (
     <Card className='flex flex-col  '>

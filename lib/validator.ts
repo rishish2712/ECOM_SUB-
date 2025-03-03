@@ -1,4 +1,4 @@
-import {z} from 'zod'
+import { z } from 'zod'
 import { formatNumberWithDecimal } from './utils'
 
 const Price = (field: string) =>
@@ -7,7 +7,7 @@ const Price = (field: string) =>
     .refine(
       (value) => /^\d+(\.\d{2})?$/.test(formatNumberWithDecimal(value)),
       `${field} must have exactly two decimal places (e.g., 49.99)`
-)
+    )
 const MongoId = z
   .string()
   .regex(/^[0-9a-fA-F]{24}$/, { message: 'Invalid MongoDB ID' })
@@ -68,7 +68,7 @@ const UserName = z
 const Email = z.string().min(1, 'Email is required').email('Email is invalid')
 const Password = z
   .string()
-  .min(8, 'Password must be at least 8 characters including numbers')
+  .min(5, 'Password must be at least 8 characters including numbers')
 const UserRole = z.string().min(1, 'Role is required')
 
 export const UserInputSchema = z.object({
@@ -80,7 +80,7 @@ export const UserInputSchema = z.object({
   password: Password,
   paymentMethod: z.string().min(1, 'Payment method is required'),
   address: z.object({
-    fullNmae: z.string().min(3, 'Full Name is required'),
+    fullName: z.string().min(3, 'Full Name is required'),
     street: z.string().min(3, 'Street is required'),
     city: z.string().min(3, 'City is required'),
     postalCode: z.string().min(6, 'Postal code is required'),
@@ -179,3 +179,10 @@ export const CartSchema = z.object({
   expectedDeliveryDate: z.optional(z.date()),
 })
 
+export const UserSignUpSchema = UserSignInSchema.extend({
+  name: UserName,
+  confirmPassword: Password,
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword'],
+})
