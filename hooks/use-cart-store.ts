@@ -64,15 +64,23 @@ const useCartStore = create(
         set({
           cart: {
             ...get().cart,
-            items: [...items],
+            items: updatedCartItems,
             ...(await calcDeliveryDateAndPrice({ 
               items : updatedCartItems,
               shippingAddress,
             })),
           },
         })
-
-        return 'Item added to cart'
+        const foundItem = updatedCartItems.find(
+          (x) =>
+            x.product === item.product &&
+            x.color === item.color &&
+            x.size === item.size
+        )
+        if (!foundItem) {
+          throw new Error('Item not found in cart')
+        }
+        return foundItem.clientId
       },
 
       updateItem: async (item: OrderItem, quantity: number) => {

@@ -47,7 +47,7 @@ export const AVAILABLE_DELIVERY_DATES = [
     freeShippingMinPrice : 0,
   },
   {
-    name : "Tommorrow",
+    name : "Next 5 Days",
     daysToDeliver : 5,
     shippingPrice : 4.9,
     freeShippingMinPrice : 35,

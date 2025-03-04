@@ -16,8 +16,10 @@ import {
 import { TrashIcon } from 'lucide-react'
 import ProductPrice from './product/product-price'
 import { FREE_SHIPPING_MIN_PRICE } from '@/lib/constants'
+import { useRouter } from 'next/navigation'
 
 export default function CartSidebar() {
+  const router = useRouter();
   const {
     cart: { items, itemsPrice },
     updateItem,
@@ -94,6 +96,7 @@ export default function CartSidebar() {
                       size={'sm'}
                       onClick={() => {
                         removeItem(item)
+                        router.push('/cart')
                       }}
                     >
                       <TrashIcon className='w-4 h-4' />

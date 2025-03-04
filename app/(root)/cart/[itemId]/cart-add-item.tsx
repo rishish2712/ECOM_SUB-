@@ -15,7 +15,11 @@ export default function CartAddItem({ itemId }: { itemId: string }) {
   const {
     cart: { items, itemsPrice },
   } = useCartStore()
-  const item = items.find((x) => x.clientId === itemId)
+  const item = items.find((x) => {
+    console.log(`Client Id : ${x.clientId}`);
+    console.log(`Item Id : ${itemId}`);
+    return x.clientId === itemId
+  })
 
   if (!item) return notFound()
   return (
