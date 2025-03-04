@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 import dotenv from "dotenv";
+import { cwd } from 'process'
+import { loadEnvConfig } from '@next/env'
+
+loadEnvConfig(cwd())
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cached = (global as any).mongoose || { conn: null, promise: null }
@@ -20,7 +24,7 @@ export const connectToDatabase = async (
 
 dotenv.config();
 
-const MONGODB_URI = "mongodb+srv://ujeshadmin:J.NpX9m53.qkMmw@cluster0.bdtpf.mongodb.net/ujeshdata?retryWrites=true&w=majority&appName=Cluster0";
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error("MONGODB_URI is missing");
