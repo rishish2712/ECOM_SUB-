@@ -6,6 +6,12 @@ import {
     UserInputSchema,
     UserSignInSchema,
     UserSignUpSchema,
+    ShippingAddressSchema,
+    SettingInputSchema,
+    CarouselSchema,
+    SiteCurrencySchema,
+    SiteLanguageSchema,
+    OrderInputSchema
 } from '@/lib/validator'
 
 
@@ -14,6 +20,7 @@ import {
 export type IProductInput = z.infer<typeof ProductInputSchema>
 
 export type Data = {
+    settings : ISettingInput[]
     users: IUserInput[]
     products: IProductInput[]
     headerMenus: {
@@ -29,8 +36,20 @@ export type Data = {
     }[]
 }
 
+// Order
+export type IOrderInput = z.infer<typeof OrderInputSchema>
+export type IOrderList = IOrderInput & {
+  _id: string
+  user: {
+    name: string
+    email: string
+  }
+  createdAt: Date
+}
+
 export type OrderItem = z.infer<typeof OrderItemSchema>
 export type Cart = z.infer<typeof CartSchema>
+export type ShippingAddress = z.infer<typeof ShippingAddressSchema>
 
 
 
@@ -38,3 +57,12 @@ export type Cart = z.infer<typeof CartSchema>
 export type IUserInput = z.infer<typeof UserInputSchema>
 export type IUserSignIn = z.infer<typeof UserSignInSchema>
 export type IUserSignUp = z.infer<typeof UserSignUpSchema>
+
+
+// setting
+export type ICarousel = z.infer<typeof CarouselSchema>
+export type ISettingInput = z.infer<typeof SettingInputSchema>
+export type ClientSetting = ISettingInput & {
+    currency: string
+}
+export type SiteCurrency = z.infer<typeof SiteCurrencySchema>
