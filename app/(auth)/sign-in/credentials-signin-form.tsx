@@ -24,14 +24,12 @@ import { APP_NAME } from '@/lib/constants'
 
 const signInDefaultValues =
   process.env.NODE_ENV === 'development'
-    ? {
-        email: 'admin@example.com',
-        password: '123456',
-      }
-    : {
+    ?
+  {
         email: '',
         password: '',
       }
+  : ""
 
 export default function CredentialsSignInForm() {
   const searchParams = useSearchParams()
@@ -39,7 +37,6 @@ export default function CredentialsSignInForm() {
 
   const form = useForm<IUserSignIn>({
     resolver: zodResolver(UserSignInSchema),
-    defaultValues: signInDefaultValues,
   })
 
   const { control, handleSubmit } = form
