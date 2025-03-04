@@ -24,18 +24,14 @@ import { APP_NAME } from '@/lib/constants'
 
 const signUpDefaultValues =
   process.env.NODE_ENV === 'development'
-    ? {
-        name: 'john doe',
-        email: 'john@me.com',
-        password: '123456',
-        confirmPassword: '123456',
-      }
-    : {
+    ? 
+  {
         name: '',
         email: '',
         password: '',
         confirmPassword: '',
       }
+  : ""
 
 export default function SignUpForm() {
   const searchParams = useSearchParams()
@@ -43,7 +39,6 @@ export default function SignUpForm() {
 
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
-    defaultValues: signUpDefaultValues,
   })
 
   const { control, handleSubmit } = form
