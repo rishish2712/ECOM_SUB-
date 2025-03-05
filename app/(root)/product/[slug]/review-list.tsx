@@ -176,7 +176,7 @@ export default function ReviewList({
                   Write a customer review
                 </Button>
 
-                <DialogContent className='sm:max-w-[425px]'>
+                <DialogContent className='sm:max-w-[425px] bg-white'>
                   <Form {...form}>
                     <form method='post' onSubmit={form.handleSubmit(onSubmit)}>
                       <DialogHeader>
