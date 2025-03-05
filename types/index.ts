@@ -3,6 +3,7 @@ import {
     CartSchema,
     OrderItemSchema,
     ProductInputSchema,
+    ReviewInputSchema,
     UserInputSchema,
     UserSignInSchema,
     UserSignUpSchema,
@@ -16,13 +17,25 @@ import {
 
 
 
-
+export type IReviewInput = z.infer<typeof ReviewInputSchema>
+export type IReviewDetails = IReviewInput & {
+    _id: string
+    createdAt: string
+    user: {
+      name: string
+    }
+  }
 export type IProductInput = z.infer<typeof ProductInputSchema>
 
 export type Data = {
     settings : ISettingInput[]
     users: IUserInput[]
     products: IProductInput[]
+    reviews: {
+        title: string
+        rating: number
+        comment: string
+      }[]
     headerMenus: {
         name: string
         herf: string
