@@ -1,5 +1,9 @@
 import mongoose from 'mongoose'
 import dotenv from "dotenv";
+import { cwd } from 'process'
+import { loadEnvConfig } from '@next/env'
+
+loadEnvConfig(cwd())
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cached = (global as any).mongoose || { conn: null, promise: null }

@@ -10,7 +10,7 @@ loadEnvConfig(cwd())
 const main = async () => {
   try {
     const { products, users } = data
-    await connectToDatabase("mongodb+srv://ujeshadmin:J.NpX9m53.qkMmw@cluster0.bdtpf.mongodb.net/ujeshdata?retryWrites=true&w=majority&appName=Cluster0")
+    await connectToDatabase(process.env.MONGODB_URI)
 
     await Product.deleteMany()
     const createdProducts = await Product.insertMany(products)
