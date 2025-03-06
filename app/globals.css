@@ -100,11 +100,7 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
-
-
-
-@layer base {
+  
   * {
     border: var(--border);
     outline: var(--ring) / 50;
@@ -121,6 +117,9 @@
   }
   .header-button {
     @apply cursor-pointer p-1 border border-transparent hover:border-white rounded-[2px];
+  }
+  .item-button {
+    @apply p-3 hover:bg-muted hover:no-underline;
   }
   .h1-bold {
     @apply font-bold text-2xl lg:text-3xl;
