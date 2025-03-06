@@ -1,6 +1,28 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import qs from 'query-string'
 
+export function formUrlQuery({
+  params,
+  key,
+  value,
+}: {
+  params: string
+  key: string
+  value: string | null
+}) {
+  const currentUrl = qs.parse(params)
+
+  currentUrl[key] = value
+
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
+    { skipNull: true }
+  )
+}
 
 const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
   currency: 'USD',
@@ -38,7 +60,6 @@ export const round2 = (num: number) =>
 export const generateId = () =>
   Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join('')
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatError = (error: any): string => {
   if (error.name === 'ZodError') {
     const fieldErrors = Object.keys(error.errors).map((field) => {
@@ -133,4 +154,8 @@ export const formatDateTime = (dateString: Date) => {
     dateOnly: formattedDate,
     timeOnly: formattedTime,
   }
+}
+
+export function formatId(id: string) {
+  return `..${id.substring(id.length - 6)}`
 }
