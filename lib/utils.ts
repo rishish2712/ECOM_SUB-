@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import qs from 'query-string'
+import { ZodError } from "zod"
 
 export function formUrlQuery({
   params,
@@ -60,28 +61,73 @@ export const round2 = (num: number) =>
 export const generateId = () =>
   Array.from({ length: 24 }, () => Math.floor(Math.random() * 10)).join('')
 
-export const formatError = (error: any): string => {
-  if (error.name === 'ZodError') {
-    const fieldErrors = Object.keys(error.errors).map((field) => {
-      const errorMessage = error.errors[field].message
-      return `${error.errors[field].path}: ${errorMessage}` // field: errorMessage
+export const formatError = (error: unknown): string => {
+  if (isZodError(error)) {
+    const fieldErrors = error.errors.map((e) => {
+      const path = e.path.join('.') || 'Field'
+      return `${path}: ${e.message}`
     })
     return fieldErrors.join('. ')
-  } else if (error.name === 'ValidationError') {
+  } else if (isValidationError(error)) {
     const fieldErrors = Object.keys(error.errors).map((field) => {
-      const errorMessage = error.errors[field].message
-      return errorMessage
+      return error.errors[field].message
     })
     return fieldErrors.join('. ')
-  } else if (error.code === 11000) {
+  } else if (isMongoDuplicateKeyError(error)) {
     const duplicateField = Object.keys(error.keyValue)[0]
     return `${duplicateField} already exists`
-  } else {
-    // return 'Something went wrong. please try again'
+  } else if (typeof error === 'object' && error !== null && 'message' in error) {
     return typeof error.message === 'string'
       ? error.message
       : JSON.stringify(error.message)
+  } else {
+    return 'Something went wrong. Please try again.'
   }
+}
+
+// Type Guards
+function isZodError(error: unknown): error is ZodError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'name' in error &&
+    error.name === 'ZodError' &&
+    'errors' in error &&
+    Array.isArray((error as {errors : unknown[] }).errors)
+  )
+}
+
+function isValidationError(error: unknown): error is ValidationError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'name' in error &&
+    error.name === 'ValidationError' &&
+    'errors' in error &&
+    typeof error.errors === 'object'
+  )
+}
+
+interface MongoDuplicateKeyError {
+  code: number
+  keyValue: Record<string, string>
+}
+
+function isMongoDuplicateKeyError(error: unknown): error is MongoDuplicateKeyError {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    'code' in error &&
+    'keyValue' in error &&
+    (error as { code: number }).code === 11000
+  )
+}
+
+
+// Add missing types (or import them if they exist elsewhere in your project)
+interface ValidationError {
+  name: 'ValidationError'
+  errors: Record<string, { message: string }>
 }
 
 export function calculateFutureDate(days: number) {

@@ -11,7 +11,7 @@ export function ColorProvider({
   const { color, updateCssVariables } = useColorStore(theme)
   React.useEffect(() => {
     updateCssVariables()
-  }, [theme, color])
+  }, [theme, color, updateCssVariables])
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }

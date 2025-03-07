@@ -20,14 +20,6 @@ import { APP_NAME } from '@/lib/constants'
 import { useState } from 'react';
 import Toast from '@/components/ui/credentials_valiadate';
 
-const signInDefaultValues =
-  process.env.NODE_ENV === 'development'
-    ? {
-      email: '',
-      password: '',
-    }
-    : ''
-
 export default function LoginPage() {
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -55,11 +47,7 @@ export default function LoginPage() {
 
       // Redirect after successful login
       redirect(callbackUrl);
-
-      setTimeout(() => {
-        setIsToastVisible(false);
-      }, 3000); // Hide toast after 3 seconds
-    } catch (error) {
+    } catch {
       // Show failure message
       setToastMessage('Invalid email or password');
       setIsToastVisible(true);

@@ -22,17 +22,6 @@ import { Separator } from '@/components/ui/separator'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { APP_NAME } from '@/lib/constants'
 
-const signUpDefaultValues =
-  process.env.NODE_ENV === 'development'
-    ? 
-  {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      }
-  : ""
-
 export default function SignUpForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'

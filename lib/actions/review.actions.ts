@@ -11,7 +11,6 @@ import Review, { IReview } from '../db/models/review.model'
 import { formatError } from '../utils'
 import { ReviewInputSchema } from '../validator'
 import { IReviewDetails, IReviewInput } from '@/types'
-import { getSetting } from './setting.actions'
 import { PAGE_SIZE } from '../constants'
 
 export async function createUpdateReview({

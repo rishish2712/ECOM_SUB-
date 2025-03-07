@@ -45,20 +45,6 @@ import {
 import { toast } from '@/hooks/use-toast'
 import { createOrder } from '@/lib/actions/order.actions'
 
-const shippingAddressDefaultValues =
-  process.env.NODE_ENV === 'development'
-    ?
-    {
-      fullName: '',
-      street: '',
-      city: '',
-      province: '',
-      phone: '',
-      postalCode: '',
-      country: '',
-    }
-    : ""
-
 const CheckoutForm = () => {
   const router = useRouter()
 

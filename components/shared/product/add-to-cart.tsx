@@ -37,8 +37,12 @@ export default function AddToCart({
               onClick: () => router.push('/cart'),
             },
           })
-        } catch (error: any) {
-          toast.error(error.message)
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            toast.error(error.message)
+          } else {
+            toast.error('An unknown error occurred')
+          }
         }
       }}
     >
@@ -70,8 +74,12 @@ export default function AddToCart({
             const itemId = await addItem(item, quantity)
             toast.success('Added to Cart')
             router.push(`/cart/${itemId}`)
-          } catch (error: any) {
-            toast.error(error.message)
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              toast.error(error.message)
+            } else {
+              toast.error('An unknown error occurred')
+            }
           }
         }}
       >
@@ -84,8 +92,12 @@ export default function AddToCart({
             addItem(item, quantity)
             toast.success('Proceeding to Checkout')
             router.push(`/checkout`)
-          } catch (error: any) {
-            toast.error(error.message)
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              toast.error(error.message)
+            } else {
+              toast.error('An unknown error occurred')
+            }
           }
         }}
         className='w-full rounded-full'
