@@ -14,7 +14,7 @@ import {
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IUserSignUp } from '@/types'
-import { registerUser, signInWithCredentials } from '@/lib/actions/user.action'
+import { registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
 import { toast } from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserSignUpSchema } from '@/lib/validator'

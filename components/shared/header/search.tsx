@@ -9,8 +9,9 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { APP_NAME } from '@/lib/constants'
-const categories = ['men', 'women', 'kids', 'accessories']
+import { getAllCategories } from '@/lib/actions/product.actions'
 export default async function Search() {
+  const categories = await getAllCategories()
   return (
     <form
       action='/search'
@@ -38,7 +39,7 @@ export default async function Search() {
       />
       <button
         type='submit'
-        className='bg-primary text-primary-foreground text-black rounded-s-none rounded-e-md h-full px-3 py-2 '
+        className='bg-primary text-black rounded-s-none rounded-e-md h-full px-3 py-2 '
       >
         <SearchIcon className='w-6 h-6' />
       </button>

@@ -9,7 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { SignOut } from '@/lib/actions/user.action'
+import { SignOut } from '@/lib/actions/user.actions'
 import { cn } from '@/lib/utils'
 import { ChevronDown } from 'lucide-react'
 import Link from 'next/link'
@@ -29,7 +29,7 @@ export default async function UserButton() {
           </div>
         </DropdownMenuTrigger>
         {session ? (
-          <DropdownMenuContent className='w-56' align='end' forceMount>
+          <DropdownMenuContent className='w-56 bg-white' align='end' forceMount>
             <DropdownMenuLabel className='font-normal'>
               <div className='flex flex-col space-y-1'>
                 <p className='text-sm font-medium leading-none'>
@@ -66,7 +66,7 @@ export default async function UserButton() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         ) : (
-          <DropdownMenuContent className='w-56' align='end' forceMount>
+          <DropdownMenuContent className='w-56 bg-white' align='end' forceMount>
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link

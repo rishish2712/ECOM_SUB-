@@ -13,11 +13,12 @@ import {
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IUserSignIn } from '@/types'
-import { signInWithCredentials } from '@/lib/actions/user.action'
+import { signInWithCredentials } from '@/lib/actions/user.actions'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserSignInSchema } from '@/lib/validator'
 import { APP_NAME } from '@/lib/constants'
-import { useState, useEffect } from 'react'
+import { useState } from 'react';
+import Toast from '@/components/ui/credentials_valiadate';
 
 const signInDefaultValues =
   process.env.NODE_ENV === 'development'
@@ -27,52 +28,50 @@ const signInDefaultValues =
     }
     : ''
 
-export default function CredentialsSignInForm() {
-  const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+export default function LoginPage() {
+  const [isToastVisible, setIsToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const form = useForm<IUserSignIn>({
     resolver: zodResolver(UserSignInSchema),
-  })
+  });
 
-  const { control, handleSubmit } = form
-  const [error, setError] = useState("")
-  const [showerror, setshowerror] = useState(false)
+  const { control, handleSubmit } = form;
 
+  // Handle the form submission for login
   const onSubmit = async (data: IUserSignIn) => {
     try {
+      // Attempt to sign in with credentials
       await signInWithCredentials({
         email: data.email,
         password: data.password,
-      })
-      setError("SignIn Successfully")
-      setshowerror(true)
-      redirect(callbackUrl)
+      });
+
+      // On successful login, show success message
+      setToastMessage('Successfully logged in!');
+      setIsToastVisible(true);
+
+      // Redirect after successful login
+      redirect(callbackUrl);
+
+      setTimeout(() => {
+        setIsToastVisible(false);
+      }, 3000); // Hide toast after 3 seconds
     } catch (error) {
-      setError("Invalid email or password");
-      setshowerror(true)
+      // Show failure message
+      setToastMessage('Invalid email or password');
+      setIsToastVisible(true);
+
+      setTimeout(() => {
+        setIsToastVisible(false);
+      }, 3000); // Hide toast after 3 seconds
     }
-  }
-
-
-  useEffect(() => {
-    if (showerror) {
-      const timer = setTimeout(() => {
-        setshowerror(false)
-      }, 2000) // Hide the error after 4 seconds
-      return () => clearTimeout(timer) // Cleanup the timer on component unmount
-    }
-  }, [showerror])
-
+  };
 
   return (
-    <>    {showerror && error && (
-      <div className="fixed top-0 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded-b-md shadow-lg z-50">
-        {error}
-      </div>
-    )}
-
-
+    <>
       <Form {...form}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <input type="hidden" name="callbackUrl" value={callbackUrl} />
@@ -120,6 +119,13 @@ export default function CredentialsSignInForm() {
           </div>
         </form>
       </Form>
+
+      {/* Toast component */}
+      <Toast
+        message={toastMessage}
+        isVisible={isToastVisible}
+        onClose={() => setIsToastVisible(false)}
+      />
     </>
-  )
+  );
 }

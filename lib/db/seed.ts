@@ -1,10 +1,11 @@
 import data from '@/lib/data'
 import { connectToDatabase } from '.'
 import Product from './models/product.model'
-import { cwd } from 'process'
-import { loadEnvConfig } from '@next/env'
 import User from './models/user.model'
 import Review from './models/review.model'
+import { cwd } from 'process'
+import { loadEnvConfig } from '@next/env'
+
 
 loadEnvConfig(cwd())
 
