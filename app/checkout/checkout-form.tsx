@@ -47,17 +47,17 @@ import { createOrder } from '@/lib/actions/order.actions'
 
 const shippingAddressDefaultValues =
   process.env.NODE_ENV === 'development'
-    ? 
-  {
-        fullName: '',
-        street: '',
-        city: '',
-        province: '',
-        phone: '',
-        postalCode: '',
-        country: '',
-      }
-  : ""
+    ?
+    {
+      fullName: '',
+      street: '',
+      city: '',
+      province: '',
+      phone: '',
+      postalCode: '',
+      country: '',
+    }
+    : ""
 
 const CheckoutForm = () => {
   const router = useRouter()
@@ -108,35 +108,35 @@ const CheckoutForm = () => {
   const [isDeliveryDateSelected, setIsDeliveryDateSelected] =
     useState<boolean>(false)
 
-    const handlePlaceOrder = async () => {
-      const res = await createOrder({
-        items,
-        shippingAddress,
-        expectedDeliveryDate: calculateFutureDate(
-          AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
-        ),
-        deliveryDateIndex,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        totalPrice,
+  const handlePlaceOrder = async () => {
+    const res = await createOrder({
+      items,
+      shippingAddress,
+      expectedDeliveryDate: calculateFutureDate(
+        AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
+      ),
+      deliveryDateIndex,
+      paymentMethod,
+      itemsPrice,
+      shippingPrice,
+      taxPrice,
+      totalPrice,
+    })
+    if (!res.success) {
+      toast({
+        description: res.message,
+        variant: 'destructive',
       })
-      if (!res.success) {
-        toast({
-          description: res.message,
-          variant: 'destructive',
-        })
-      } else {
-        toast({
-          description: res.message,
-          variant: 'default',
-        })
-        clearCart()
-        router.push(`/checkout/${res.data?.orderId}`)
-      }
+    } else {
+      toast({
+        description: res.message,
+        variant: 'default',
+      })
+      clearCart()
+      router.push(`/checkout/${res.data?.orderId}`)
     }
-    
+  }
+
   const handleSelectPaymentMethod = () => {
     setIsAddressSelected(true)
     setIsPaymentMethodSelected(true)
@@ -638,7 +638,7 @@ const CheckoutForm = () => {
                                     </div>
                                     <div>
                                       {(dd.freeShippingMinPrice > 0 &&
-                                      itemsPrice >= dd.freeShippingMinPrice
+                                        itemsPrice >= dd.freeShippingMinPrice
                                         ? 0
                                         : dd.shippingPrice) === 0 ? (
                                         'FREE Shipping'
