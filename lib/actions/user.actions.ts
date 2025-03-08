@@ -42,8 +42,8 @@ export async function registerUser(userSignUp: IUserSignUp) {
     }
 }
 
-export async function updateUserName(user : IUserName) {
-    try{
+export async function updateUserName(user: IUserName) {
+    try {
         await connectToDatabase()
         const session = await auth();
         const currentUser = await User.findById(session?.user?.id);
@@ -51,11 +51,11 @@ export async function updateUserName(user : IUserName) {
         currentUser.name = user.name
         const updateUser = await currentUser.save();
         return {
-            success : true,
-            message : "User updated successfully",
-            data : JSON.parse(JSON.stringify(updateUser)),
+            success: true,
+            message: "User updated successfully",
+            data: JSON.parse(JSON.stringify(updateUser)),
         }
     } catch (error) {
-        return { success : false, message : formatError(error) }
+        return { success: false, message: formatError(error) }
     }
 }
