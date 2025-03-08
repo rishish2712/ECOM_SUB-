@@ -23,6 +23,7 @@ import Toast from '@/components/ui/credentials_valiadate';
 export default function LoginPage() {
   const [isToastVisible, setIsToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/';
 
@@ -32,32 +33,39 @@ export default function LoginPage() {
 
   const { control, handleSubmit } = form;
 
-  // Handle the form submission for login
   const onSubmit = async (data: IUserSignIn) => {
+    if (isSubmitting) return; // Prevent multiple submissions
+    setIsSubmitting(true); // Set submitting state to true
+
     try {
-      // Attempt to sign in with credentials
-      await signInWithCredentials({
+      const res = await signInWithCredentials({
         email: data.email,
         password: data.password,
       });
 
-      // On successful login, show success message
-      setToastMessage('Successfully logged in!');
+      if (res?.error) {
+        // Handle failure case
+        setToastMessage('Invalid email or password');
+        setIsToastVisible(true);
+        setIsSubmitting(false);
+      } else {
+        // Handle success
+        setToastMessage('Successfully logged in!');
+        setIsToastVisible(true);
+
+        // Send an email on successful login
+        await sendEmail(data.email);
+
+        // Use a delay before redirecting to ensure the toast message is visible
+        setTimeout(() => {
+          redirect(callbackUrl);
+        }, 3000); // Delay the redirection to show the success message for 3 seconds
+      }
+    } catch (error) {
+      // Handle error case
+      setToastMessage('Invalid Email or Password');
       setIsToastVisible(true);
-
-      // Optionally send an email on successful login
-      await sendEmail(data.email);
-
-      // Redirect after successful login
-      redirect(callbackUrl);
-    } catch {
-      // Show failure message
-      setToastMessage('Invalid email or password');
-      setIsToastVisible(true);
-
-      setTimeout(() => {
-        setIsToastVisible(false);
-      }, 1000); // Hide toast after 3 seconds
+      setIsSubmitting(false);
     }
   };
 
@@ -127,7 +135,9 @@ export default function LoginPage() {
             />
 
             <div>
-              <Button type="submit">Sign In</Button>
+              <Button type="submit" disabled={isSubmitting}> {/* Disable submit button if submitting */}
+                {isSubmitting ? 'Signing In...' : 'Sign In'}
+              </Button>
             </div>
             <div className="text-sm">
               By signing in, you agree to {APP_NAME}&apos;s{' '}

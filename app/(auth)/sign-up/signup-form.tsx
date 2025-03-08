@@ -36,7 +36,7 @@ export default function SignUpForm() {
   const sendEmail = async (email: string, name: string) => {
     const formData = {
       to: email,  // Use the email from the data
-      subject: 'Account Created',
+      subject: 'Account Created Successfully',
       text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`, // Corrected email text
     }
 
@@ -64,7 +64,7 @@ export default function SignUpForm() {
       const res = await registerUser(data)
       if (!res.success) {
         toast.error('Error while registering', {
-          duration: 1000,
+          duration: 1,
         })
         return
       }
@@ -85,7 +85,7 @@ export default function SignUpForm() {
         throw error
       }
       toast.error('Invalid email or password', {
-        duration: 1000,
+        duration: 1,
       })
     }
   }
