@@ -32,26 +32,60 @@ export default function SignUpForm() {
 
   const { control, handleSubmit } = form
 
+  // Function to send an email
+  const sendEmail = async (email: string, name: string) => {
+    const formData = {
+      to: email,  // Use the email from the data
+      subject: 'Account Created',
+      text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`, // Corrected email text
+    }
+
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      const data = await res.json()
+      if (data.success) {
+        console.log('Email sent successfully')
+      } else {
+        console.error('Error sending email: ' + data.error)
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+    }
+  }
+
   const onSubmit = async (data: IUserSignUp) => {
     try {
       const res = await registerUser(data)
       if (!res.success) {
-        toast.error("Error",{
-        duration:4000,
+        toast.error('Error while registering', {
+          duration: 1000,
         })
         return
       }
+
+      // Automatically sign in the user after successful registration
       await signInWithCredentials({
         email: data.email,
         password: data.password,
       })
+
+      // Send the email after successful registration
+      await sendEmail(data.email, data.name)
+
+      // Redirect to the callback URL after successful registration and login
       redirect(callbackUrl)
     } catch (error) {
       if (isRedirectError(error)) {
         throw error
       }
-      toast.error('Invalid email or password',{
-        duration:4000,
+      toast.error('Invalid email or password', {
+        duration: 1000,
       })
     }
   }

@@ -1,8 +1,8 @@
-'use client'
-import { redirect, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
+'use client';
+import { redirect, useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import Link from 'next/link';
 import {
   Form,
   FormControl,
@@ -10,13 +10,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { IUserSignIn } from '@/types'
-import { signInWithCredentials } from '@/lib/actions/user.actions'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { UserSignInSchema } from '@/lib/validator'
-import { APP_NAME } from '@/lib/constants'
+} from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { IUserSignIn } from '@/types';
+import { signInWithCredentials } from '@/lib/actions/user.actions';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UserSignInSchema } from '@/lib/validator';
+import { APP_NAME } from '@/lib/constants';
 import { useState } from 'react';
 import Toast from '@/components/ui/credentials_valiadate';
 
@@ -45,6 +45,9 @@ export default function LoginPage() {
       setToastMessage('Successfully logged in!');
       setIsToastVisible(true);
 
+      // Optionally send an email on successful login
+      await sendEmail(data.email);
+
       // Redirect after successful login
       redirect(callbackUrl);
     } catch {
@@ -54,7 +57,34 @@ export default function LoginPage() {
 
       setTimeout(() => {
         setIsToastVisible(false);
-      }, 3000); // Hide toast after 3 seconds
+      }, 1000); // Hide toast after 3 seconds
+    }
+  };
+
+  // Function to send an email
+  const sendEmail = async (email: string) => {
+    const formData = {
+      to: email,  // Use the email from the data
+      subject: 'Login Success',
+      text: 'You have successfully logged in!',
+    };
+
+    try {
+      const res = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success) {
+        console.log('Email sent successfully');
+      } else {
+        console.error('Error sending email: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
     }
   };
 
