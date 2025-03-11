@@ -1,6 +1,5 @@
 'use client'
 import { redirect, useSearchParams } from 'next/navigation'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
@@ -14,7 +13,7 @@ import {
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IUserSignUp } from '@/types'
-import { registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
+import { checkUserExists, registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
 import { toast } from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserSignUpSchema } from '@/lib/validator'
@@ -30,29 +29,23 @@ export default function SignUpForm() {
     resolver: zodResolver(UserSignUpSchema),
   })
 
-  const { control, handleSubmit } = form
+  const { control, handleSubmit, setError } = form
 
-  // Function to send an email
   const sendEmail = async (email: string, name: string) => {
     const formData = {
-      to: email,  // Use the email from the data
+      to: email,
       subject: 'Account Created Successfully',
-      text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`, // Corrected email text
+      text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`,
     }
-
     try {
       const res = await fetch('/api/send-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
       const data = await res.json()
-      if (data.success) {
-        console.log('Email sent successfully')
-      } else {
-        console.error('Error sending email: ' + data.error)
+      if (!data.success) {
+        console.error('Error sending email:', data.error)
       }
     } catch (error) {
       console.error('Error sending email:', error)
@@ -61,32 +54,37 @@ export default function SignUpForm() {
 
   const onSubmit = async (data: IUserSignUp) => {
     try {
-      const res = await registerUser(data)
-      if (!res.success) {
-        toast.error('Error while registering', {
-          duration: 1,
+      const userExists = await checkUserExists(data.email)
+      if (userExists) {
+        setError('email', { type: 'manual', message: 'Email already exists' })
+        toast.error('Email already exists', {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: '#ff4d4f',
+            color: '#fff',
+            fontWeight: 'bold',
+            padding: '12px',
+            borderRadius: '8px',
+          },
         })
         return
       }
 
-      // Automatically sign in the user after successful registration
-      await signInWithCredentials({
-        email: data.email,
-        password: data.password,
-      })
+      const res = await registerUser(data)
+      if (!res.success) {
+        toast.error('Error while registering', { duration: 3000, position: 'top-center' })
+        return
+      }
 
-      // Send the email after successful registration
+      await signInWithCredentials({ email: data.email, password: data.password })
       await sendEmail(data.email, data.name)
-
-      // Redirect to the callback URL after successful registration and login
       redirect(callbackUrl)
     } catch (error) {
       if (isRedirectError(error)) {
         throw error
       }
-      toast.error('Invalid email or password', {
-        duration: 1,
-      })
+      toast.error('Invalid email or password', { duration: 3000, position: 'top-center' })
     }
   }
 
@@ -102,13 +100,11 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter name address' {...field} />
+                  <Input placeholder='Enter name' {...field} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={control}
             name='email'
@@ -116,13 +112,12 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter email address' {...field} />
+                  <Input placeholder='Enter email' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />
-
           <FormField
             control={control}
             name='password'
@@ -130,13 +125,9 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Enter password'
-                    {...field}
-                  />
+                  <Input type='password' placeholder='Enter password' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />
@@ -147,13 +138,9 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Confirm Password'
-                    {...field}
-                  />
+                  <Input type='password' placeholder='Confirm Password' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />

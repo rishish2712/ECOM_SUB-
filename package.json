@@ -52,8 +52,6 @@
 
     "@radix-ui/react-toast": "^1.2.6",
 
-    "@sendgrid/mail": "^8.1.4",
-
     "auth": "^1.2.3",
 
     "bcryptjs": "^3.0.2",

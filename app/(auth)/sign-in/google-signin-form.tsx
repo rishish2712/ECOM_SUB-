@@ -12,7 +12,6 @@ export function GoogleSignInForm() {
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [userEmail, setUserEmail] = useState('') // Store the email in state
-  const [userName, setUserName] = useState('')   // Store the name in state
   const { pending } = useFormStatus()
 
   // Handle Google sign-in success
@@ -25,7 +24,6 @@ export function GoogleSignInForm() {
 
       // Update the state with user information
       setUserEmail(userInfo.email)
-      setUserName(userInfo.name)
     }
   }
 
@@ -53,17 +51,18 @@ export function GoogleSignInForm() {
     setSuccessMessage('') // Clear any previous success messages
 
     try {
+      if (!userEmail) {
+        await sendEmail(userEmail)
+      }
       // Call SignInWithGoogle, which might not return anything
-      await SignInWithGoogle()
+      SignInWithGoogle()
 
       // If the sign-in is successful, update the UI accordingly
       setSuccessMessage('Successfully logged in!')
 
       // If the email is available, send the email
-      if (!userEmail) {
-        await sendEmail(userEmail)
-      }
-      
+
+
 
     } catch (error) {
       setErrorMessage('An error occurred while logging in. Please try again.')
