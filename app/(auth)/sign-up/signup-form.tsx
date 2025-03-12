@@ -13,17 +13,20 @@ import {
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IUserSignUp } from '@/types'
-import { checkUserExists, registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
+import { checkUserExists, registerUser } from '@/lib/actions/user.actions'
 import { toast } from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserSignUpSchema } from '@/lib/validator'
 import { Separator } from '@/components/ui/separator'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { APP_NAME } from '@/lib/constants'
+import { useState } from 'react'
+
 
 export default function SignUpForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
@@ -31,62 +34,55 @@ export default function SignUpForm() {
 
   const { control, handleSubmit, setError } = form
 
-  const sendEmail = async (email: string, name: string) => {
-    const formData = {
-      to: email,
-      subject: 'Account Created Successfully',
-      text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`,
-    }
+  const onSubmit = async (data: IUserSignUp) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      const res = await fetch('/api/send-email', {
+      const userExists = await checkUserExists(data.email);
+      if (userExists) {
+        setError('email', { type: 'manual', message: 'Email already exists' });
+        toast.error('Email already exists', { duration: 3000, position: 'top-center' });
+        return;
+      }
+
+      const res = await registerUser(data);
+      if (!res.success) {
+        toast.error('Error while registering', { duration: 3000, position: 'top-center' });
+        return;
+      }
+
+      // ✅ Store email & temp password in sessionStorage for verification step
+      sessionStorage.setItem('tempPassword', data.password);
+      localStorage.setItem('signupEmail', data.email);
+
+      // ✅ Send verification code
+      const verifyRes = await fetch('/api/sendVerificationCode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-      const data = await res.json()
-      if (!data.success) {
-        console.error('Error sending email:', data.error)
+        body: JSON.stringify({ email: data.email }),
+      });
+
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        toast.error('Failed to send verification code', { duration: 3000, position: 'top-center' });
+        return;
       }
+
+      toast.success('Verification code sent to your email', { duration: 3000, position: 'top-center' });
+
+      // ✅ Redirect to verify page
+      redirect(`/verify?email=${data.email}`);
+
     } catch (error) {
-      console.error('Error sending email:', error)
+      if (isRedirectError(error)) throw error;
+      toast.error('Something went wrong', { duration: 3000, position: 'top-center' });
     }
-  }
-
-  const onSubmit = async (data: IUserSignUp) => {
-    try {
-      const userExists = await checkUserExists(data.email)
-      if (userExists) {
-        setError('email', { type: 'manual', message: 'Email already exists' })
-        toast.error('Email already exists', {
-          duration: 3000,
-          position: 'top-center',
-          style: {
-            background: '#ff4d4f',
-            color: '#fff',
-            fontWeight: 'bold',
-            padding: '12px',
-            borderRadius: '8px',
-          },
-        })
-        return
-      }
-
-      const res = await registerUser(data)
-      if (!res.success) {
-        toast.error('Error while registering', { duration: 3000, position: 'top-center' })
-        return
-      }
-
-      await signInWithCredentials({ email: data.email, password: data.password })
-      await sendEmail(data.email, data.name)
-      redirect(callbackUrl)
-    } catch (error) {
-      if (isRedirectError(error)) {
-        throw error
-      }
-      toast.error('Invalid email or password', { duration: 3000, position: 'top-center' })
+    finally {
+      setIsSubmitting(false);
     }
-  }
+  };
+
+
 
   return (
     <Form {...form}>
@@ -145,7 +141,9 @@ export default function SignUpForm() {
             )}
           />
           <div>
-            <Button type='submit'>Sign Up</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+            </Button>
           </div>
           <div className='text-sm'>
             By creating an account, you agree to {APP_NAME}&apos;s{' '}
@@ -164,3 +162,4 @@ export default function SignUpForm() {
     </Form>
   )
 }
+

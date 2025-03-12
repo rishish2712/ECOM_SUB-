@@ -7,6 +7,7 @@ import { connectToDatabase } from '../db'
 import { formatError } from '../utils'
 import { redirect } from 'next/navigation'
 import User from '@/lib/db/models/user.model';
+import { generateResetToken } from '@/lib/utils';
 
 
 export async function signInWithCredentials(user: IUserSignIn) {
