@@ -19,6 +19,7 @@ import { UserSignInSchema } from '@/lib/validator';
 import { APP_NAME } from '@/lib/constants';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function LoginPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +35,35 @@ export default function LoginPage() {
 
   // Function to send an email after login success
   const sendEmail = async (email: string) => {
+    const resetToken = uuidv4()
+    const resetLink = `${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}`;
     try {
+      const htmlContent = `
+        <body style="padding: 20px; text-align: center;">
+          <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); text-align: center;">
+          <div style="display: flex; justify-content: center;">
+            <img src=" " alt="User Avatar" style="width: 60px; border-radius: 50%;">
+          </div>
+            <h2 style="color: #333;">🎉 Login Successful! 🎉</h2>
+            <p style="font-size: 16px; color: #555;">Hello,</p>
+            <p style="font-size: 16px; color: #555;">
+              You have successfully logged in to your account. If this was not you, please secure your account immediately.
+            </p>
+            <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+              Secure My Account
+            </a>
+            <p style="font-size: 14px; color: #777; margin-top: 20px;">
+              If you didn't request this login, please change your password immediately to secure your account.
+            </p>
+            <hr style="border: none; border-top: 1px solid #ddd;">
+            <p style="font-size: 14px; color: #999;">
+              This is an automated message. If you have any concerns, contact our support team at
+              <a href="mailto:hamarabusiness24@gmail.com" style="color: #007bff;">LOKLBIZ</a>.
+            </p>
+          </div>
+        </body>
+      `;
+
       const res = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -44,6 +73,7 @@ export default function LoginPage() {
           to: email,
           subject: 'Login Success',
           text: 'You have successfully logged in!',
+          html: htmlContent,
         }),
       });
 
@@ -160,7 +190,6 @@ export default function LoginPage() {
             <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
               Forgot Password?
             </Link>
-
           </div>
           <div className="text-sm">
             By signing in, you agree to {APP_NAME}&apos;s{' '}
