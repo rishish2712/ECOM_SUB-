@@ -8,6 +8,9 @@ import { Button } from '@/components/ui/button';
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+
 
 const ForgotPasswordSchema = z.object({
     email: z.string().email({ message: 'Invalid email address' }),
@@ -16,6 +19,9 @@ const ForgotPasswordSchema = z.object({
 export default function ForgotPassword() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const form = useForm({ resolver: zodResolver(ForgotPasswordSchema) });
+    const router = useRouter();
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get('callbackUrl') || '/sign-in'
 
     const onSubmit = async (data: any) => {
         setIsSubmitting(true);
@@ -29,6 +35,7 @@ export default function ForgotPassword() {
             const response = await res.json();
             if (response.success) {
                 toast.success('Reset link sent to your email!', { position: 'top-center' });
+                router.push(callbackUrl);
             } else {
                 toast.error(response.message || 'Something went wrong!', { position: 'top-center' });
             }
@@ -37,6 +44,7 @@ export default function ForgotPassword() {
         } finally {
             setIsSubmitting(false);
         }
+        router.push(callbackUrl)
     };
 
     return (
@@ -54,7 +62,7 @@ export default function ForgotPassword() {
                                 <FormControl>
                                     <Input type="email" placeholder="Enter your email" {...field} />
                                 </FormControl>
-                                <FormMessage className="text-red-500 text-sm font-medium"/>
+                                <FormMessage className="text-red-500 text-sm font-medium" />
                             </FormItem>
                         )}
                     />

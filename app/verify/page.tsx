@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import { signInWithCredentials } from '@/lib/actions/user.actions'
-import { redirect, useSearchParams } from 'next/navigation'
 
 const VerifyPage = () => {
     const [email, setEmail] = useState('');
@@ -11,8 +10,6 @@ const VerifyPage = () => {
     const [isResending, setIsResending] = useState(false);
     const router = useRouter();
     const [isVerifying, setIsVerifying] = useState(false);
-    const searchParams = useSearchParams()
-    const callbackUrl = searchParams.get('callbackUrl') || '/'
 
     useEffect(() => {
         const storedEmail = localStorage.getItem('signupEmail');
@@ -45,7 +42,6 @@ const VerifyPage = () => {
                 sessionStorage.removeItem('tempPassword');
             }
 
-            router.push(callbackUrl);
 
         } else {
             toast.error(' Invalid verification code!', { duration: 3000, position: 'top-center' });
