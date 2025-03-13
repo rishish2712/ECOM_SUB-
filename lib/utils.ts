@@ -31,8 +31,8 @@ export function formUrlQuery({
   )
 }
 
-const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
-  currency: 'USD',
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-IN', {
+  currency: 'INR',
   style: 'currency',
   minimumFractionDigits: 2,
 })
