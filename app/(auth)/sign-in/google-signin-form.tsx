@@ -1,5 +1,6 @@
 'use client'
 
+import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import { useFormStatus } from 'react-dom'
 import { Button } from '@/components/ui/button'
@@ -8,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { SignInWithGoogle } from '@/lib/actions/user.actions'
 
 export function GoogleSignInForm() {
+  const { data: session } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
@@ -27,7 +29,12 @@ export function GoogleSignInForm() {
       setUserEmail(userInfo.email)
       setUserName(userInfo.name)
     }
-  }
+    else if (session?.user) {
+      // Fallback: Use session values if credential is missing
+      setUserEmail(session.user.email)
+      setUserName(session.user.name)
+    }
+  } 
 
   const handleError = (error: any) => {
     console.error('Google Login Error:', error)
@@ -54,7 +61,8 @@ export function GoogleSignInForm() {
 
     try {
       // Call SignInWithGoogle, which might not return anything
-      await SignInWithGoogle()
+      const signInData = await SignInWithGoogle()
+      console.log(Sign in data here : ${signInData});
 
       // If the sign-in is successful, update the UI accordingly
       setSuccessMessage('Successfully logged in!')

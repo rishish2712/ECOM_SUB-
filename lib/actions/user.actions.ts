@@ -18,7 +18,8 @@ export const SignOut = async () => {
     redirect(redirectTo.redirect)
 }
 export const SignInWithGoogle = async () => {
-    await signIn('google')
+    console.log(`Callback is working just fine`);
+    await signIn('google');
 }
 
 // CREATE
