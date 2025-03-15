@@ -11,20 +11,20 @@ export default async function Header() {
   const categories = await getAllCategories()
   return (
     <header className='bg-black  text-white'>
-      <div className='px-2'>
+      <div className='px-3'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center'>
             <Link
               href='/'
-              className='flex items-center header-button font-extrabold text-2xl m-1 '
+              className='flex items-center header-button font-extrabold text-2xl m-1 ml-2.5'
             >
               <Image
-                src='/icons/logo.svg'
-                width={40}
+                src='/icons/llll.png'
+                width={250}
                 height={40}
                 alt={`${APP_NAME} logo`}
               />
-              {APP_NAME}
+              {/* {APP_NAME} */}
             </Link>
           </div>
           <div className='hidden md:block flex-1 max-w-xl'>

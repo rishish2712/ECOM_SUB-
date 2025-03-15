@@ -1,6 +1,5 @@
 'use client'
 import { redirect, useSearchParams } from 'next/navigation'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
@@ -14,81 +13,76 @@ import {
 } from '@/components/ui/form'
 import { useForm } from 'react-hook-form'
 import { IUserSignUp } from '@/types'
-import { registerUser, signInWithCredentials } from '@/lib/actions/user.actions'
+import { checkUserExists, registerUser } from '@/lib/actions/user.actions'
 import { toast } from 'react-hot-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UserSignUpSchema } from '@/lib/validator'
 import { Separator } from '@/components/ui/separator'
 import { isRedirectError } from 'next/dist/client/components/redirect-error'
 import { APP_NAME } from '@/lib/constants'
+import { useState } from 'react'
+
 
 export default function SignUpForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
   })
 
-  const { control, handleSubmit } = form
-
-  // Function to send an email
-  const sendEmail = async (email: string, name: string) => {
-    const formData = {
-      to: email,  // Use the email from the data
-      subject: 'Account Created Successfully',
-      text: `Hello ${name},\n\nThank you for signing up for ${APP_NAME}!`, // Corrected email text
-    }
-
-    try {
-      const res = await fetch('/api/send-email', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-      const data = await res.json()
-      if (data.success) {
-        console.log('Email sent successfully')
-      } else {
-        console.error('Error sending email: ' + data.error)
-      }
-    } catch (error) {
-      console.error('Error sending email:', error)
-    }
-  }
+  const { control, handleSubmit, setError } = form
 
   const onSubmit = async (data: IUserSignUp) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
-      const res = await registerUser(data)
+      const userExists = await checkUserExists(data.email);
+      if (userExists) {
+        setError('email', { type: 'manual', message: 'Email already exists' });
+        toast.error('Email already exists', { duration: 3000, position: 'top-center' });
+        return;
+      }
+
+      const res = await registerUser(data);
       if (!res.success) {
-        toast.error('Error while registering', {
-          duration: 1,
-        })
-        return
+        toast.error('Error while registering', { duration: 3000, position: 'top-center' });
+        return;
       }
 
-      // Automatically sign in the user after successful registration
-      await signInWithCredentials({
-        email: data.email,
-        password: data.password,
-      })
+      // ✅ Store email & temp password in sessionStorage for verification step
+      sessionStorage.setItem('tempPassword', data.password);
+      localStorage.setItem('signupEmail', data.email);
 
-      // Send the email after successful registration
-      await sendEmail(data.email, data.name)
+      // ✅ Send verification code
+      const verifyRes = await fetch('/api/sendVerificationCode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: data.email }),
+      });
 
-      // Redirect to the callback URL after successful registration and login
-      redirect(callbackUrl)
+      const verifyData = await verifyRes.json();
+      if (!verifyData.success) {
+        toast.error('Failed to send verification code', { duration: 3000, position: 'top-center' });
+        return;
+      }
+
+      toast.success('Verification code sent to your email', { duration: 3000, position: 'top-center' });
+
+      // ✅ Redirect to verify page
+      redirect(`/verify?email=${data.email}`);
+
     } catch (error) {
-      if (isRedirectError(error)) {
-        throw error
-      }
-      toast.error('Invalid email or password', {
-        duration: 1,
-      })
+      if (isRedirectError(error)) throw error;
+      toast.error('Something went wrong', { duration: 3000, position: 'top-center' });
     }
-  }
+    finally {
+      setIsSubmitting(false);
+    }
+  };
+
+
 
   return (
     <Form {...form}>
@@ -102,13 +96,11 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter name address' {...field} />
+                  <Input placeholder='Enter name' {...field} />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
-
           <FormField
             control={control}
             name='email'
@@ -116,13 +108,12 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter email address' {...field} />
+                  <Input placeholder='Enter email' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />
-
           <FormField
             control={control}
             name='password'
@@ -130,13 +121,9 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Enter password'
-                    {...field}
-                  />
+                  <Input type='password' placeholder='Enter password' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />
@@ -147,18 +134,16 @@ export default function SignUpForm() {
               <FormItem className='w-full'>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type='password'
-                    placeholder='Confirm Password'
-                    {...field}
-                  />
+                  <Input type='password' placeholder='Confirm Password' {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 font-medium text-sm" />
               </FormItem>
             )}
           />
           <div>
-            <Button type='submit'>Sign Up</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+            </Button>
           </div>
           <div className='text-sm'>
             By creating an account, you agree to {APP_NAME}&apos;s{' '}
@@ -177,3 +162,4 @@ export default function SignUpForm() {
     </Form>
   )
 }
+

@@ -4,9 +4,11 @@ import { auth, signIn, signOut } from '@/auth'
 import { IUserName, IUserSignIn, IUserSignUp } from '@/types'
 import { UserSignUpSchema } from '../validator'
 import { connectToDatabase } from '../db'
-import User from '../db/models/user.model'
 import { formatError } from '../utils'
 import { redirect } from 'next/navigation'
+import User from '@/lib/db/models/user.model';
+import { generateResetToken } from '@/lib/utils';
+
 
 export async function signInWithCredentials(user: IUserSignIn) {
     const response = signIn('credentials', { ...user, redirect: false })
@@ -21,6 +23,15 @@ export const SignInWithGoogle = async () => {
     console.log(`Callback is working just fine`);
     await signIn('google');
 }
+
+export const checkUserExists = async (email: string) => {
+    await connectToDatabase();
+
+    const user = await User.findOne({ email });
+    return !!user;
+};
+
+
 
 // CREATE
 export async function registerUser(userSignUp: IUserSignUp) {

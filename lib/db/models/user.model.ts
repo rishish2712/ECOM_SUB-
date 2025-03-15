@@ -1,26 +1,34 @@
-import { IUserInput} from "@/types"
-import { Document,Model,model,models,Schema} from 'mongoose'
+import { Document, Model, model, models, Schema } from 'mongoose';
 
-export interface IUser extends Document, IUserInput {
-    _id: string 
-    createdAt: Date
-    updatedAt: Date
+// Define IUser interface including resetPasswordToken & resetPasswordExpires
+export interface IUser extends Document {
+    _id: string;
+    email: string;
+    password: string;
+    name: string;
+    role: string;
+    image?: string;
+    emailVerified?: boolean;
+    resetPasswordToken?: string | null; // ✅ Ensure it's defined
+    resetPasswordExpires?: Date | null; // ✅ Ensure it's defined
 }
 
-const userSchema = new Schema<IUser>(
-{
-    email: {type: String, required: true, unique: true},
-    name: { type: String, required: true},
-    role: {type: String, required: true, default: 'User'},
-    password: {type: String, required: true},
-    image: {type: String},
-    emailVerified: {type: Boolean, default: false},
-},
-{
-    timestamps: true,
-}
-)
+// Define User Schema
+const UserSchema = new Schema<IUser>(
+    {
+        email: { type: String, required: true, unique: true },
+        name: { type: String, required: true },
+        role: { type: String, required: true, default: 'User' },
+        password: { type: String, required: true },
+        image: { type: String, default: null },
+        emailVerified: { type: Boolean, default: false },
+        resetPasswordToken: { type: String, default: null }, // ✅ Ensure this exists
+        resetPasswordExpires: { type: Date, default: null }, // ✅ Ensure this exists
+    },
+    { timestamps: true }
+);
 
-const User = (models.User as Model<IUser>) || model<IUser>('User',userSchema)
+// Use existing model if available to avoid overwriting
+const User = models.User || model<IUser>('User', UserSchema);
 
-export default User
+export default User;

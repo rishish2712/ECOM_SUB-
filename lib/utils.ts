@@ -2,6 +2,12 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import qs from 'query-string'
 import { ZodError } from "zod"
+import crypto from 'crypto';
+
+
+export function generateResetToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
 
 export function formUrlQuery({
   params,
@@ -25,8 +31,8 @@ export function formUrlQuery({
   )
 }
 
-const CURRENCY_FORMATTER = new Intl.NumberFormat('en-US', {
-  currency: 'USD',
+const CURRENCY_FORMATTER = new Intl.NumberFormat('en-IN', {
+  currency: 'INR',
   style: 'currency',
   minimumFractionDigits: 2,
 })
@@ -93,7 +99,7 @@ function isZodError(error: unknown): error is ZodError {
     'name' in error &&
     error.name === 'ZodError' &&
     'errors' in error &&
-    Array.isArray((error as {errors : unknown[] }).errors)
+    Array.isArray((error as { errors: unknown[] }).errors)
   )
 }
 
