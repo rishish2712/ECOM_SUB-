@@ -17,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const options = {
       amount: amount * 100, // Amount in paise (INR)
       currency: currency || 'INR',
-      receipt: `order_rcptid_${Math.random() * 1000}`,
+      receipt: `order_rcptid_${Math.random() * 1000000}`,
       payment_capture: 1,
     };
 

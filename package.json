@@ -18,7 +18,9 @@
 
     "lint": "next lint",
 
-    "server": "node backend/server.ts"
+    "server": "node backend/server.ts",
+
+    "email": "react-email dev"
 
   },
 
@@ -51,6 +53,8 @@
     "@radix-ui/react-slot": "^1.1.2",
 
     "@radix-ui/react-toast": "^1.2.6",
+
+    "@react-email/components": "^0.0.33",
 
     "auth": "^1.2.3",
 
@@ -110,6 +114,8 @@
 
     "recharts": "^2.15.1",
 
+    "resend": "^4.1.2",
+
     "sonner": "^2.0.1",
 
     "tailwind-merge": "^3.0.2",
@@ -145,6 +151,8 @@
     "eslint": "^9",
 
     "eslint-config-next": "15.2.1-canary.5",
+
+    "react-email": "^3.0.7",
 
     "tailwindcss": "^4",
 

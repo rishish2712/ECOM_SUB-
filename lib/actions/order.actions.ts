@@ -10,6 +10,13 @@ import Order from '../db/models/order.model'
 import { DateRange } from 'react-day-picker'
 import Product from '../db/models/product.model'
 import User from '../db/models/user.model'
+import Razorpay from 'razorpay'
+import crypto from 'crypto'
+
+const razorpay = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID!,
+  key_secret: process.env.RAZORPAY_KEY_SECRET!,
+})
 
 // GET ORDERS
 export async function getOrderSummary(date: DateRange) {
@@ -100,6 +107,31 @@ export async function getOrderSummary(date: DateRange) {
     topSalesCategories: JSON.parse(JSON.stringify(topSalesCategories)),
     topSalesProducts: JSON.parse(JSON.stringify(topSalesProducts)),
     latestOrders: JSON.parse(JSON.stringify(latestOrders)) as IOrderList[],
+  }
+}
+
+export async function createRazorpayOrder(orderId: string) {
+  await connectToDatabase()
+  try {
+    const order = await Order.findById(orderId)
+    if (!order) throw new Error('Order not found')
+
+    const razorpayOrder = await razorpay.orders.create({
+      amount: order.totalPrice * 100,
+      currency: 'INR',
+      payment_capture: true,
+    })
+
+    order.paymentResult = {
+      id: razorpayOrder.id,
+      status: 'CREATED',
+      email_address: '',
+      pricePaid: '0',
+    }
+    await order.save()
+    return { success: true, message: 'Razorpay order created', data: razorpayOrder.id }
+  } catch (err) {
+    return { success: false, message: formatError(err) }
   }
 }
 
