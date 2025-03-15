@@ -46,6 +46,12 @@ import { toast } from '@/hooks/use-toast'
 import { createOrder } from '@/lib/actions/order.actions'
 import Script from 'next/script'
 
+declare global {
+  interface Window {
+    Razorpay: any
+  }
+}
+
 
 const CheckoutForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
