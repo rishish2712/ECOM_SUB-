@@ -33,13 +33,16 @@ const VerifyPage = () => {
             toast.success(' Verification successful!', { duration: 3000, position: 'top-center' });
 
             const tempPassword = sessionStorage.getItem('tempPassword');
-            if (tempPassword) {
-                await signInWithCredentials({
-                    email,
-                    password: tempPassword,
-                });
+            console.log("Email Password ", email, " ", tempPassword)
 
-                sessionStorage.removeItem('tempPassword');
+            if (tempPassword) {
+
+                await signInWithCredentials({ email, password: tempPassword });
+                router.push('/');
+
+            } else {
+                toast.error("Fail to login \n Try to login Manually", { duration: 3000, position: "top-center" })
+                router.push('/login');
             }
 
 

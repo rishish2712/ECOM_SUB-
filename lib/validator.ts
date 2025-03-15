@@ -68,7 +68,7 @@ export const ProductInputSchema = z.object({
   const Email = z.string().min(1, 'Email is required').email('Email is invalid')
   const Password = z
   .string()
-  .min(5, 'Password must be at least 8 characters including numbers')
+  .min(8, 'Password must be at least 8 characters including numbers')
   const UserRole = z.string().min(1, 'Role is required')
   
   export const UserInputSchema = z.object({

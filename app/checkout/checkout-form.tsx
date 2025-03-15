@@ -44,8 +44,17 @@ import {
 } from '@/lib/constants'
 import { toast } from '@/hooks/use-toast'
 import { createOrder } from '@/lib/actions/order.actions'
+import Script from 'next/script'
+
+declare global {
+  interface Window {
+    Razorpay: any
+  }
+}
+
 
 const CheckoutForm = () => {
+  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter()
 
   const {
@@ -94,34 +103,122 @@ const CheckoutForm = () => {
   const [isDeliveryDateSelected, setIsDeliveryDateSelected] =
     useState<boolean>(false)
 
+
   const handlePlaceOrder = async () => {
-    const res = await createOrder({
-      items,
-      shippingAddress,
-      expectedDeliveryDate: calculateFutureDate(
-        AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
-      ),
-      deliveryDateIndex,
-      paymentMethod,
-      itemsPrice,
-      shippingPrice,
-      taxPrice,
-      totalPrice,
-    })
-    if (!res.success) {
-      toast({
-        description: res.message,
-        variant: 'destructive',
-      })
-    } else {
+    setIsProcessing(true);
+
+    try {
+      const userId = shippingAddress?.fullName; // ✅ Use fullName as userId
+
+      if (!userId) {
+        console.error("❌ User name (fullName) is missing.");
+        toast({
+          description: 'Full Name is required to place an order.',
+          variant: 'destructive',
+        });
+        setIsProcessing(false);
+        return;
+      }
+
+      const res = await createOrder({
+        items,
+        shippingAddress,
+        expectedDeliveryDate: calculateFutureDate(
+          AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
+        ),
+        deliveryDateIndex,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        taxPrice,
+        totalPrice,
+      });
+
+      if (!res.success) {
+        toast({
+          description: res.message,
+          variant: 'destructive',
+        });
+        setIsProcessing(false);
+        return;
+      }
+
       toast({
         description: res.message,
         variant: 'default',
-      })
-      clearCart()
-      router.push(`/checkout/${res.data?.orderId}`)
+      });
+
+      // Ensure Razorpay is loaded
+      if (typeof window === 'undefined' || !window.Razorpay) {
+        console.error('Razorpay SDK not loaded');
+        setIsProcessing(false);
+        return;
+      }
+
+      // Call API to create order in Razorpay
+      const response = await fetch('/api/createOrder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId, // ✅ Using Full Name as userId
+          amount: Math.round(totalPrice * 100),
+          currency: "INR",
+          items,
+          taxPrice,
+          shippingPrice,
+          itemsPrice,
+          totalPrice,
+          paymentMethod,
+          shippingAddress,
+          expectedDeliveryDate: calculateFutureDate(
+            AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
+          ),
+        }),
+      });
+
+      const order = await response.json();
+      console.log('API Response:', order);
+
+      if (!order.razorpayOrderId) {
+        console.error('Invalid order response:', order);
+        throw new Error('Invalid order response');
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: Math.round(totalPrice * 100), // Convert to paise
+        currency: "INR",
+        name: 'LOKLBIZ',
+        description: 'Test Transaction',
+        order_id: order.razorpayOrderId,
+        handler: async (response: any) => {
+          console.log('✅ Payment Successful', response);
+          clearCart();
+          router.push(`/`);
+        },
+        prefill: {
+          name: userId, // ✅ Full Name prefilled
+          email: 'example@gmail.com',
+          contact: shippingAddress.phone,
+        },
+        theme: {
+          color: '#007bff',
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+
+    } catch (error) {
+      console.error('❌ Payment failed:', error);
+      toast({
+        description: 'Payment failed, please try again.',
+        variant: 'destructive',
+      });
     }
-  }
+
+    setIsProcessing(false);
+  };
 
   const handleSelectPaymentMethod = () => {
     setIsAddressSelected(true)
@@ -221,6 +318,7 @@ const CheckoutForm = () => {
 
   return (
     <main className='max-w-6xl mx-auto highlight-link'>
+      <Script src='http://checkout.razorpay.com/v1/checkout.js' />
       <div className='grid md:grid-cols-4 gap-6'>
         <div className='md:col-span-3'>
           {/* shipping address */}
@@ -662,7 +760,7 @@ const CheckoutForm = () => {
               <Card className='hidden md:block '>
                 <CardContent className='p-4 flex flex-col md:flex-row justify-between items-center gap-3'>
                   <Button onClick={handlePlaceOrder} className='rounded-full bg-amber-300 hover:bg-amber-400'>
-                    Place Your Order
+                    {isProcessing ? 'Processing...' : 'Place Your Order'}
                   </Button>
                   <div className='flex-1'>
                     <p className='font-bold text-lg'>
