@@ -30,6 +30,12 @@ export default function SignUpForm() {
 
   const form = useForm<IUserSignUp>({
     resolver: zodResolver(UserSignUpSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password : '',
+      confirmPassword : '',
+    },
   })
 
   const { control, handleSubmit, setError } = form

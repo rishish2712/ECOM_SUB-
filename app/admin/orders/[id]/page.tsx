@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
  
  import { auth } from '@/auth'
  import { getOrderById } from '@/lib/actions/order.actions'
- import OrderDetailsForm from '@/components/shared/order/order-details-form'
+ import OrderDetailsForm from '@/components/shared/order/order-details-from'
  import Link from 'next/link'
  
  export const metadata = {
@@ -19,8 +19,10 @@ import { notFound } from 'next/navigation'
  
    const { id } = params
  
-   const order = await getOrderById(id)
-   if (!order) notFound()
+   const orderResponse = await getOrderById(id)
+   if (!orderResponse) notFound()
+    
+   const order = orderResponse.data;
  
    const session = await auth()
  

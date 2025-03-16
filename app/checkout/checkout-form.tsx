@@ -80,6 +80,16 @@ const CheckoutForm = () => {
 
   const shippingAddressForm = useForm<ShippingAddress>({
     resolver: zodResolver(ShippingAddressSchema),
+    defaultValues: {
+      fullName: '',
+      street: '',
+      city: '',
+      country: '',
+      postalCode: '',
+      province: '',
+      phone: '',
+      email: '',
+    },
   })
   const onSubmitShippingAddress: SubmitHandler<ShippingAddress> = (values) => {
     setShippingAddress(values)
