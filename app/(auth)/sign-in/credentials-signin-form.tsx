@@ -42,7 +42,7 @@ export default function LoginPage() {
         <body style="padding: 20px; text-align: center;">
           <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0,0,0,0.1); text-align: center;">
           <div style="display: flex; justify-content: center;">
-            <img src="icons/logo.png" alt="User Avatar" style="width: 60px; border-radius: 50%;">
+            <img src="cid:logo" alt="User Avatar" style="width: 60px; border-radius: 50%;">
           </div>
             <h2 style="color: #333;">🎉 Login Successful! 🎉</h2>
             <p style="font-size: 16px; color: #555;">Hello,</p>

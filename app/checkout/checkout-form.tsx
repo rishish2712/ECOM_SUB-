@@ -42,7 +42,7 @@ import {
   AVAILABLE_PAYMENT_METHODS,
   DEFAULT_PAYMENT_METHOD,
 } from '@/lib/constants'
-import { toast } from '@/hooks/use-toast'
+import { toast } from 'react-hot-toast'
 import { createOrder } from '@/lib/actions/order.actions'
 import Script from 'next/script'
 
@@ -113,9 +113,16 @@ const CheckoutForm = () => {
 
       if (!userId) {
         console.error("❌ User name (fullName) is missing.");
-        toast({
-          description: 'Full Name is required to place an order.',
-          variant: 'destructive',
+        toast.error('Full Name is required to place an order.', {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: '#FF3B30',
+            color: '#fff',
+            fontWeight: 'bold',
+            padding: '12px',
+            borderRadius: '8px',
+          },
         });
         setIsProcessing(false);
         return;
@@ -136,18 +143,20 @@ const CheckoutForm = () => {
       });
 
       if (!res.success) {
-        toast({
-          description: res.message,
-          variant: 'destructive',
+        toast.error("Cart is empty", {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: '#FF3B30',
+            color: '#fff',
+            fontWeight: 'bold',
+            padding: '12px',
+            borderRadius: '8px',
+          },
         });
         setIsProcessing(false);
         return;
       }
-
-      toast({
-        description: res.message,
-        variant: 'default',
-      });
 
       // Ensure Razorpay is loaded
       if (typeof window === 'undefined' || !window.Razorpay) {
@@ -172,7 +181,7 @@ const CheckoutForm = () => {
           paymentMethod,
           shippingAddress: {
             ...shippingAddress,
-            email: shippingAddress.email, 
+            email: shippingAddress.email,
           },
           expectedDeliveryDate: calculateFutureDate(
             AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
@@ -196,13 +205,21 @@ const CheckoutForm = () => {
         description: 'Test Transaction',
         order_id: order.razorpayOrderId,
         handler: async (response: any) => {
-          console.log('✅ Payment Successful', response);
-          clearCart();
-          router.push(`/`);
+          toast.success('Payment Successfully.', {
+            duration: 3000,
+            position: 'top-center',
+            style: {
+              background: '#000000',
+              color: '#FFFFFF',
+              fontWeight: 'bold',
+              padding: '12px',
+              borderRadius: '8px',
+            },
+          });
         },
         prefill: {
-          name: userId, // ✅ Full Name prefilled
-          email: 'example@gmail.com',
+          name: userId,
+          email: shippingAddress.email,
           contact: shippingAddress.phone,
         },
         theme: {
@@ -213,15 +230,101 @@ const CheckoutForm = () => {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
 
+      try {
+        const htmlContent = `
+          <body style="padding: 20px; text-align: center; background-color: #f4f4f4;">
+    <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; 
+                box-shadow: 0px 0px 10px rgba(0,0,0,0.1); text-align: center;">
+      
+      <div style="display: flex; justify-content: center;">
+        <img src="cid:logo" alt="Company Logo" style="width: auto; hight: auto; border-radius: 50%;">
+      </div>
+  
+      <h2 style="color: #28a745;">✅ Payment Successful! ✅</h2>
+  
+      <p style="font-size: 16px; color: #555;">Hello,</p>
+      
+      <p style="font-size: 16px; color: #555;">
+        Your payment of <strong>₹${totalPrice}</strong> has been successfully processed.
+      </p>
+  
+      <p style="font-size: 16px; color: #555;">
+        Your order 
+        <p>
+        <strong>
+        Your order includes (${items.length} items):<br>
+${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong>
+  </p> is now confirmed and will be shipped soon.
+      </p>
+  
+      <a href="${process.env.NEXT_PUBLIC_APP_URL}/account/orders/" 
+         style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; 
+                background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+        View Order Details
+      </a>
+  
+      <p style="font-size: 14px; color: #777; margin-top: 20px;">
+        If you have any questions regarding your order, please contact our support team.
+      </p>
+  
+      <hr style="border: none; border-top: 1px solid #ddd;">
+  
+      <p style="font-size: 14px; color: #999;">
+        Thank you for shopping with <strong>LOKLBIZ</strong>!  
+      </p>
+  
+      <p style="font-size: 14px; color: #999;">
+        Need help? Contact us at <a href="mailto:hamarabusiness24@gmail.com" style="color: #007bff;">Customer Support</a>.
+      </p>
+    </div>
+  </body>
+  
+        `;
+
+        const res = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            to: shippingAddress?.email,
+            subject: 'Payment Successful ',
+            text: 'We have successfully Placed Your Order!',
+            html: htmlContent,
+          }),
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          console.error('Error sending email:', data.error);
+        }
+        clearCart();
+        router.push('/')
+      } catch (error) {
+        console.error('Error sending email:', error);
+      }
+
+
     } catch (error) {
       console.error('❌ Payment failed:', error);
-      toast({
-        description: 'Payment failed, please try again.',
-        variant: 'destructive',
+      toast.error('Payment Failed', {
+        duration: 3000,
+        position: 'top-center',
+        style: {
+          background: '#FF3B30',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '12px',
+          borderRadius: '8px',
+        },
       });
     }
 
+
     setIsProcessing(false);
+
+
+
   };
 
   const handleSelectPaymentMethod = () => {
@@ -490,18 +593,18 @@ const CheckoutForm = () => {
                             )}
                           />
                           <FormField
-                              control={shippingAddressForm.control}
-                              name='email'
-                              render={({ field }) => (
-                                <FormItem className='w-full'>
-                                  <FormLabel>Email</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder='Enter email' {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
+                            control={shippingAddressForm.control}
+                            name='email'
+                            render={({ field }) => (
+                              <FormItem className='w-full'>
+                                <FormLabel>Email</FormLabel>
+                                <FormControl>
+                                  <Input placeholder='Enter email' {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
                         </div>
                       </CardContent>
                       <CardFooter className='  p-4'>

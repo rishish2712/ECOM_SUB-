@@ -49,7 +49,7 @@ const orderSchema = new Schema<IOrder>(
     shippingPrice: { type: Number, required: true },
     taxPrice: { type: Number, required: true },
     totalPrice: { type: Number, required: true },
-    isPaid: { type: Boolean, required: true, default: false },
+    isPaid: { type: Boolean, required: true },
     paidAt: { type: Date },
     isDelivered: { type: Boolean, required: true, default: false },
     deliveredAt: { type: Date },

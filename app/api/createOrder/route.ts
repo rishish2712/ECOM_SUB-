@@ -25,6 +25,7 @@ export async function POST(req: Request) {
       totalPrice,
       paymentMethod,
       expectedDeliveryDate,
+      isPaid,
       shippingAddress } = await req.json();
 
     console.log("Received Order Request:", {
@@ -85,7 +86,8 @@ export async function POST(req: Request) {
         paymentMethod,
         expectedDeliveryDate,
         shippingAddress,
-        paymentStatus: 'pending',
+        paymentStatus: 'Paid',
+        isPaid: true,
         razorpayOrderId: razorpayOrder.id,
       });
 
