@@ -26,7 +26,11 @@ const ProductPrice = ({
     formatCurrency(price)
   ) : listPrice == 0 ? (
     <div className={cn('text-3xl', className)}>
+<<<<<<< HEAD
       <span className='text-xs align-super'>INR</span>
+=======
+      <span className='text-xs align-super'>₹</span>
+>>>>>>> d278e51 (netlify)
       {intValue}
       <span className='text-xs align-super'>{floatValue}</span>
     </div>
@@ -45,7 +49,11 @@ const ProductPrice = ({
           } items-center gap-2`}
       >
         <div className={cn('text-3xl', className)}>
+<<<<<<< HEAD
           <span className='text-xs align-super'>INR</span>
+=======
+          <span className='text-xs align-super'>₹</span>
+>>>>>>> d278e51 (netlify)
           {intValue}
           <span className='text-xs align-super'>{floatValue}</span>
         </div>
@@ -60,7 +68,11 @@ const ProductPrice = ({
       <div className='flex justify-center gap-3'>
         <div className='text-3xl text-orange-700'>-{discountPercent}%</div>
         <div className={cn('text-3xl', className)}>
+<<<<<<< HEAD
           <span className='text-xs align-super'>INR</span>
+=======
+          <span className='text-xs align-super'>₹</span>
+>>>>>>> d278e51 (netlify)
           {intValue}
           <span className='text-xs align-super'>{floatValue}</span>
         </div>

@@ -1,5 +1,5 @@
 'use client'
-import { BadgeDollarSign, Barcode, CreditCard, Users } from 'lucide-react'
+import { IndianRupee, Barcode, CreditCard, Users } from 'lucide-react'
 
 import Link from 'next/link'
 import {
@@ -96,11 +96,11 @@ export default function OverviewReport() {
               <CardTitle className='text-sm font-medium'>
                 Total Revenue
               </CardTitle>
-              <BadgeDollarSign />
+              <IndianRupee />
             </CardHeader>
             <CardContent className='space-y-2'>
               <div className='text-2xl font-bold'>
-                <ProductPrice price={data.totalSales} plain />
+                <ProductPrice price={data.totalSales} plain currency='INR' />
               </div>
               <div>
                 <Link className='text-xs' href='/admin/orders'>

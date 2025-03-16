@@ -19,8 +19,8 @@ export default async function Header() {
               className='flex items-center header-button font-extrabold text-2xl m-1 ml-2.5'
             >
               <Image
-                src='/icons/llll.png'
-                width={250}
+                src='/icons/shivam.png'
+                width={150}
                 height={40}
                 alt={`${APP_NAME} logo`}
               />
@@ -36,7 +36,7 @@ export default async function Header() {
           <Search />
         </div>
       </div>
-      <div className='flex items-center px-3 mb-[1px]  bg-gray-800'>
+      <div className='flex items-center px-3 mb-[1px]  bg-amber-50 text-black'>
       <Sidebar categories={categories} />
         <div className='flex items-center flex-wrap gap-3 overflow-hidden   max-h-[42px]'>
           {data.headerMenus.map((menu) => (
