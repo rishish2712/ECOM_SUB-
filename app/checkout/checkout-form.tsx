@@ -95,6 +95,7 @@ const CheckoutForm = () => {
     shippingAddressForm.setValue('postalCode', shippingAddress.postalCode)
     shippingAddressForm.setValue('province', shippingAddress.province)
     shippingAddressForm.setValue('phone', shippingAddress.phone)
+    shippingAddressForm.setValue('email', shippingAddress.email)
   }, [items, isMounted, router, shippingAddress, shippingAddressForm])
 
   const [isAddressSelected, setIsAddressSelected] = useState<boolean>(false)
@@ -169,7 +170,10 @@ const CheckoutForm = () => {
           itemsPrice,
           totalPrice,
           paymentMethod,
-          shippingAddress,
+          shippingAddress: {
+            ...shippingAddress,
+            email: shippingAddress.email, 
+          },
           expectedDeliveryDate: calculateFutureDate(
             AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
           ),
@@ -485,6 +489,19 @@ const CheckoutForm = () => {
                               </FormItem>
                             )}
                           />
+                          <FormField
+                              control={shippingAddressForm.control}
+                              name='email'
+                              render={({ field }) => (
+                                <FormItem className='w-full'>
+                                  <FormLabel>Email</FormLabel>
+                                  <FormControl>
+                                    <Input placeholder='Enter email' {...field} />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
                         </div>
                       </CardContent>
                       <CardFooter className='  p-4'>

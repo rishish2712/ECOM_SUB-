@@ -135,6 +135,7 @@ export const ShippingAddressSchema = z.object({
   postalCode: z.string().min(1, 'Postal code is required'),
   province: z.string().min(1, 'Province is required'),
   phone: z.string().min(1, 'Phone number is required'),
+  email: z.string().min(1, 'Email is required').email('Invalid email format'),
   country: z.string().min(1, 'Country is required'),
 })
 
