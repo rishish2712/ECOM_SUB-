@@ -6,6 +6,7 @@ export async function GET(req: Request, { params }: { params: { orderId: string 
     await connectToDatabase();
 
     try {
+        console.log('Params orderid ', params.orderId)
         const order = await Order.findById(params.orderId);
         if (!order) {
             return NextResponse.json({ success: false, message: 'Order not found' }, { status: 404 });

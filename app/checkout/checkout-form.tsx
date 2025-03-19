@@ -55,6 +55,7 @@ declare global {
 
 const CheckoutForm = () => {
   const [isProcessing, setIsProcessing] = useState(false);
+  const [paymentDone, setpaymentDone] = useState(false);
   const router = useRouter()
 
   const {
@@ -209,7 +210,7 @@ const CheckoutForm = () => {
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-        amount: Math.round(totalPrice * 100), // Convert to paise
+        amount: Math.round(totalPrice * 100),
         currency: "INR",
         name: 'LOKLBIZ',
         description: 'Test Transaction',
@@ -239,7 +240,26 @@ const CheckoutForm = () => {
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
+      setpaymentDone(true);
 
+    } catch (error) {
+      console.error('❌ Payment failed:', error);
+      toast.error('Payment Failed', {
+        duration: 3000,
+        position: 'top-center',
+        style: {
+          background: '#FF3B30',
+          color: '#fff',
+          fontWeight: 'bold',
+          padding: '12px',
+          borderRadius: '8px',
+        },
+      });
+    }
+
+    setIsProcessing(false);
+
+    if (paymentDone === true) {
       try {
         const htmlContent = `
           <body style="padding: 20px; text-align: center; background-color: #f4f4f4;">
@@ -303,39 +323,16 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
             html: htmlContent,
           }),
         });
-
-        const data = await res.json();
-        if (!data.success) {
-          console.error('Error sending email:', data.error);
-        }
         clearCart();
         router.push('/')
       } catch (error) {
         console.error('Error sending email:', error);
       }
 
-
-    } catch (error) {
-      console.error('❌ Payment failed:', error);
-      toast.error('Payment Failed', {
-        duration: 3000,
-        position: 'top-center',
-        style: {
-          background: '#FF3B30',
-          color: '#fff',
-          fontWeight: 'bold',
-          padding: '12px',
-          borderRadius: '8px',
-        },
-      });
     }
 
-
-    setIsProcessing(false);
-
-
-
   };
+
 
   const handleSelectPaymentMethod = () => {
     setIsAddressSelected(true)

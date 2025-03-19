@@ -3,13 +3,13 @@ import Link from 'next/link'
 
 import Pagination from '@/components/shared/pagination'
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from '@/components/ui/table'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { getMyOrders } from '@/lib/actions/order.actions'
 import { IOrder } from '@/lib/db/models/order.model'
 import { formatDateTime, formatId } from '@/lib/utils'
@@ -80,7 +80,7 @@ export default async function OrdersPage(props: {
                     : 'No'}
                 </TableCell>
                 <TableCell>
-                  <Link href={`/account/orders/${order._id}`}>
+                  <Link href={`/checkout/orderid/${order._id}`}>
                     <span className='px-2'>Details</span>
                   </Link>
                 </TableCell>
