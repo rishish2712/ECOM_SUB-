@@ -76,7 +76,6 @@ export default function ReviewList({
       setReviews([...res.data])
       setTotalPages(res.totalPages)
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       toast({
         variant: 'destructive',
@@ -108,7 +107,6 @@ export default function ReviewList({
     if (inView) {
       loadReviews()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inView])
 
   type CustomerReview = z.infer<typeof ReviewInputSchema>
