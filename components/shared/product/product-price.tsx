@@ -15,6 +15,7 @@ const ProductPrice = ({
   className?: string
   forListing?: boolean
   plain?: boolean
+  currency?: string
 }) => {
   const discountPercent = Math.round(100 - (price / listPrice) * 100)
   const stringValue = price.toString()
