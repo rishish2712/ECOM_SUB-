@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import Product from '@/lib/db/models/product.model'
 import { connectToDatabase } from '@/lib/db'
 
+export const dynamic = "force-static"
+
 export const GET = async (request: NextRequest) => {
   const listType = request.nextUrl.searchParams.get('type') || 'history'
   const productIdsParam = request.nextUrl.searchParams.get('ids')
@@ -17,8 +19,8 @@ export const GET = async (request: NextRequest) => {
   const filter =
     listType === 'history'
       ? {
-          _id: { $in: productIds },
-        }
+        _id: { $in: productIds },
+      }
       : { category: { $in: categories }, _id: { $nin: productIds } }
 
   await connectToDatabase()
