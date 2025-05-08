@@ -17,16 +17,16 @@ export default function ClientProviders({
 
   return (
     <>
-    <ThemeProvider attribute='class' defaultTheme='system'>
-      {isCartSidebarOpen ? (
-        <div className='flex min-h-screen'>
-          <div className='flex-1 overflow-hidden'>{children}</div>
-          <CartSidebar />
-        </div>
-      ) : (
-        <div>{children}</div>
-      )}
-      <Toaster />
+      <ThemeProvider >
+        {isCartSidebarOpen ? (
+          <div className='flex min-h-screen'>
+            <div className='flex-1 overflow-hidden'>{children}</div>
+            <CartSidebar />
+          </div>
+        ) : (
+          <div>{children}</div>
+        )}
+        <Toaster />
       </ThemeProvider>
     </>
   )

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import ClientProviders from '@/components/shared/client-providers';
 import { Toaster } from 'react-hot-toast';
+import { Analytics } from "@vercel/analytics/react"
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,6 +32,7 @@ export default function RootLayout({ children, }: { children: React.ReactNode; }
           {children}
           <Toaster position="top-center" reverseOrder={false} />
         </ClientProviders>
+        <Analytics/>
       </body>
     </html>
   );
