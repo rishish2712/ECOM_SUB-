@@ -8,13 +8,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
-import ThemeSwitcher from './theme-switcher'
 import UserButton from './user-button'
 export default function Menu({ forAdmin = false }: { forAdmin?: boolean }) {
   return (
     <div className='flex justify-end'>
       <nav className='hidden md:flex gap-3  w-full'>
-      <ThemeSwitcher />
         <UserButton />
         {forAdmin ? null : <CartButton />}
       </nav>
@@ -30,7 +28,6 @@ export default function Menu({ forAdmin = false }: { forAdmin?: boolean }) {
                 <SheetDescription></SheetDescription>
               </div>
             </SheetHeader>
-            <ThemeSwitcher />
             <UserButton />
             <CartButton />
           </SheetContent>
