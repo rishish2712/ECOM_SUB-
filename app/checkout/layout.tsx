@@ -16,8 +16,8 @@ export default function CheckoutLayout({
             <Image
               src='/icons/LOGO1.png'
               alt='logo'
-              width={70}
-              height={70}
+              width={150}
+              height={40}
               style={{
                 maxWidth: '100%',
                 height: 'auto',
