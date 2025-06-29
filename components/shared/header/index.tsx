@@ -24,18 +24,11 @@ export default async function Header() {
           />
         </Link>
 
-        {/* Search & Flag */}
+        {/* Search */}
         <div className="hidden md:flex items-center justify-center flex-1 mx-4">
           <div className="w-full max-w-3xl">
             <Search />
           </div>
-          {/* <Image
-            src="/icons/flag-stripe.png"
-            width={60}
-            height={30}
-            alt="India Flag Stripe"
-            className="ml-4 rounded shadow-sm"
-          /> */}
         </div>
 
         {/* User Menu */}
@@ -44,43 +37,38 @@ export default async function Header() {
 
       {/* Secondary Navigation */}
       <div className="bg-gradient-to-r from-orange-50 via-white to-green-50 border-t border-b border-amber-100 px-4 py-2">
-        <div className="flex items-center gap-4">
-          <Sidebar categories={categories} />
+        <div className="flex items-center justify-between w-full gap-4">
 
-          <nav className="flex items-center flex-wrap gap-4 text-sm font-medium">
-            {data.headerMenus.map((menu) => (
-              <Link
-                href={menu.herf}
-                key={menu.herf}
-                className="text-gray-700 hover:text-amber-600 transition-colors"
-              >
-                {menu.name}
-              </Link>
-            ))}
-          </nav>
+          {/* Sidebar + Navigation (takes remaining space before slogan image) */}
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <Sidebar categories={categories} />
 
-          {/* Secondary Indian flag stripe */}
-          {/* <div className=" hidden lg:block h-0">
+            <nav className="flex items-center gap-3 text-sm font-medium whitespace-nowrap overflow-x-auto no-scrollbar">
+              {data.headerMenus.map((menu) => (
+                <Link
+                  href={menu.herf}
+                  key={menu.herf}
+                  className="px-3 py-1.5 rounded-full bg-white/70 text-gray-700 shadow-sm hover:bg-amber-100 hover:text-amber-700 transition-all duration-300 border border-amber-200"
+                >
+                  {menu.name}
+                </Link>
+              ))}
+            </nav>
+          </div>
 
+          {/* Slogan Image */}
+          <div className="hidden lg:block shrink-0">
             <Image
-              src="/icons/lokl.png"
-              width={500}
-              height={266}
-              alt="India Colors Stripe"
-              className="rounded"
-            />
-          </div> */}
-          <div className="ml-100 hidden lg:block">
-
-          <Image
               src="/icons/image-removebg-preview (12)[1].png"
-              width={500}
+              width={400}
               height={266}
-              alt="India Colors Stripe"
+              alt="slogan"
               className="rounded"
             />
           </div>
-          <div className="ml-auto hidden lg:block">
+
+          {/* Flag Image */}
+          <div className="ml-auto hidden lg:block shrink-0">
             <Image
               src="/icons/ffg.png"
               width={100}
