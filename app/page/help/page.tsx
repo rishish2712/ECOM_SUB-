@@ -69,7 +69,7 @@ export default function HelpPage() {
           <span className="text-green-600">Get in Touch!</span>
         </h1>
         <p className="text-gray-600 text-lg max-w-xl mx-auto mb-10">
-          Whether you're a seller, shopper, or just curious about LoklBiz, we're here to help.
+          Whether you&apos;re a seller, shopper, or just curious about LoklBiz, we&apos;re here to help.
         </p>
       </div>
 
