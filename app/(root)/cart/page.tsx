@@ -28,14 +28,15 @@ export default function CartPage() {
     <div>
       <div className='grid grid-cols-1 md:grid-cols-4  md:gap-4'>
         {items.length === 0 ? (
-          <Card className='col-span-4 rounded-none'>
-            <CardHeader className='text-3xl  '>
-              Your Shopping Cart is empty
-            </CardHeader>
-            <CardContent>
-              Continue shopping on <Link href='/'>{APP_NAME}</Link>
-            </CardContent>
-          </Card>
+         <Card className="col-span-4 rounded-none flex flex-col items-center justify-center text-center gap-6 py-10">
+          <CardHeader className="text-3xl font-semibold">
+            Your Shopping Cart is empty
+          </CardHeader>
+          <div className="relative w-100 aspect-square">
+            <Image src="/icons/cart.svg" alt="Cart" fill className="object-contain"/>
+          </div>
+        </Card>
+
         ) : (
           <>
             <div className='col-span-3'>
@@ -143,6 +144,7 @@ export default function CartPage() {
                   </div>
                 </CardContent>
               </Card>
+
             </div>
             <div>
               <Card className='rounded-none'>
@@ -184,9 +186,18 @@ export default function CartPage() {
                 </CardContent>
               </Card>
             </div>
+            
           </>
+          
         )}
       </div>
+      <CardContent className="flex justify-center px-4 sm:px-6 md:px-8 lg:px-10">
+        <Link href="/" passHref>
+          <button className="mt-4 px-5 py-2 bg-amber-500 text-white rounded-md hover:bg-amber-600 transition-colors duration-200 cursor-pointer">
+            Continue Shopping on {APP_NAME}
+          </button>
+        </Link>
+      </CardContent>
       <BrowsingHistoryList className='mt-10' />
     </div>
   )
