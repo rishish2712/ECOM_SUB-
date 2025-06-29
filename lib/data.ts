@@ -1082,14 +1082,6 @@ const data: Data = {
       herf: '/search?tag=best-seller',
     },
     {
-      name: 'Browsing History',
-      herf: '/#browsing-history',
-    },
-    {
-      name: 'Customer Service',
-      herf: '/page/customer-service',
-    },
-    {
       name: 'About Us',
       herf: '/page/about-us',
     },

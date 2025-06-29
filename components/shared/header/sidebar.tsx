@@ -92,11 +92,11 @@ export default async function Sidebar({
                 Your account
               </Link>
             </DrawerClose>{' '}
-            <DrawerClose asChild>
+            {/* <DrawerClose asChild>
               <Link href='/page/customer-service' className='item-button'>
                 Customer Service
               </Link>
-            </DrawerClose>
+            </DrawerClose> */}
             {session ? (
               <form action={SignOut} className='w-full'>
                 <Button

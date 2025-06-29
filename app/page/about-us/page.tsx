@@ -3,61 +3,83 @@
 import React from 'react';
 
 export default function AboutUsPage() {
-    return (
-        <div className="relative min-h-screen overflow-hidden font-[Poppins]">
-            {/* Animated Gradient Background */}
-            <div className="absolute inset-0 z-0 animate-gradient bg-gradient-to-br from-indigo-100 via-white to-indigo-200 bg-size-200" />
+  return (
+    <div className="min-h-screen bg-white text-gray-800 font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <header className="text-center mb-20">
+          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">
+            About Us
+          </h1>
+          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            Learn about our mission, vision, and what makes LoklBiz different.
+          </p>
+        </header>
 
-            {/* Content Wrapper */}
-            <div className="relative z-10 max-w-5xl mx-auto px-6 py-16">
-                <h1
-                    className="text-5xl font-extrabold mb-12 text-center bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 via-blue-500 to-purple-600 drop-shadow-xl tracking-wide"
-                >
-                    About Us
-                </h1>
+        {/* Mission Section */}
+        <section className="grid md:grid-cols-2 gap-12 items-center mb-20">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Our Mission
+            </h2>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              To make every local product of India visible, sellable, and respected nationwide by empowering micro & small entrepreneurs.
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <img
+              src="/images/shop1.svg" // Replace this
+              alt="Mission Illustration"
+              className="max-w-md w-full"
+            />
+          </div>
+        </section>
 
-                <section className="mb-14 p-8 bg-white bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-200">
-                    <h2 className="text-3xl font-bold mb-5 text-indigo-800 tracking-wide drop-shadow-sm border-b-2 border-indigo-300 pb-2">
-                        Our Mission
-                    </h2>
-                    <p className="text-lg text-indigo-700 leading-relaxed max-w-3xl mx-auto">
-                        To make every local product of India visible, sellable, and respected nationwide by empowering micro & small entrepreneurs.
-                    </p>
-                </section>
+        {/* Vision Section */}
+        <section className="grid md:grid-cols-2 gap-12 items-center mb-20 md:flex-row-reverse">
+          
+          <div className="flex justify-center">
+            <img
+              src="/images/shop2.svg" // Replace this
+              alt="Vision Illustration"
+              className="max-w-md w-full"
+            />
+          </div>
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+              Our Vision
+            </h2>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              To become India’s most trusted platform for selling Made in India products by providing free digital access, guidance, and support.
+            </p>
+          </div>
+        </section>
 
-                <section className="mb-14 p-8 bg-white bg-opacity-80 backdrop-blur-md rounded-2xl shadow-xl border border-indigo-200">
-                    <h2 className="text-3xl font-bold mb-5 text-indigo-800 tracking-wide drop-shadow-sm border-b-2 border-indigo-300 pb-2">
-                        Our Vision
-                    </h2>
-                    <p className="text-lg text-indigo-700 leading-relaxed max-w-3xl mx-auto">
-                        To become India’s most trusted platform for selling Made in India products by providing free digital access, guidance, and support.
-                    </p>
-                </section>
+        {/* What We Offer Section */}
+        <section className="bg-gray-50 border border-gray-200 rounded-xl p-10 mb-20 shadow-sm">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            What We Offer
+          </h2>
+          <ul className="list-disc pl-6 space-y-3 text-lg text-gray-700">
+            <li>100% Indian platform to promote Indian products</li>
+            <li>Digital tools and marketing (social media & website listing)</li>
+            <li>Free guidance for seller growth</li>
+            <li>Ethical and transparent process</li>
+          </ul>
+        </section>
 
-                <section className="mb-14 p-8 bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200">
-                    <h2 className="text-3xl font-bold mb-5 text-gray-900 tracking-wide border-b-2 border-indigo-400 pb-2">
-                        What We Offer
-                    </h2>
-                    <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg leading-relaxed max-w-3xl mx-auto">
-                        <li>100% Indian platform to promote Indian products</li>
-                        <li>Digital tools and marketing (social media & website listing)</li>
-                        <li>Free guidance for seller growth</li>
-                        <li>Ethical and transparent process</li>
-                    </ul>
-                </section>
-
-                <section className="p-8 bg-white bg-opacity-90 backdrop-blur-md rounded-2xl shadow-xl border border-gray-200">
-                    <h2 className="text-3xl font-bold mb-5 text-gray-900 tracking-wide border-b-2 border-indigo-400 pb-2">
-                        Why LoklBiz
-                    </h2>
-                    <ul className="list-disc list-inside space-y-3 text-gray-700 text-lg leading-relaxed max-w-3xl mx-auto">
-                        <li>No upfront investment required</li>
-                        <li>No unnecessary lead pressure</li>
-                        <li>Fair and transparent business environment</li>
-                        <li>Focused on empowerment, not exploitation</li>
-                    </ul>
-                </section>
-            </div>
-        </div>
-    );
+        {/* Why LoklBiz Section */}
+        <section className="bg-white border border-gray-200 rounded-xl p-10 shadow-md">
+          <h2 className="text-3xl font-bold text-gray-900 mb-6">
+            Why LoklBiz
+          </h2>
+          <ul className="list-disc pl-6 space-y-3 text-lg text-gray-700">
+            <li>No upfront investment required</li>
+            <li>No unnecessary lead pressure</li>
+            <li>Fair and transparent business environment</li>
+            <li>Focused on empowerment, not exploitation</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  );
 }
