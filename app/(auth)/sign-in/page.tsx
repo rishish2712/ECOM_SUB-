@@ -22,7 +22,7 @@ export default async function SignIn(props: {
 }) {
   const searchParams = await props.searchParams
 
-  const { callbackUrl = 'https://www.loklbiz.com/api/auth/callback/google flowName=GeneralOAuthFlow' } = searchParams
+  const { callbackUrl = '/' } = searchParams
 
   const session = await auth()
   if (session) {
