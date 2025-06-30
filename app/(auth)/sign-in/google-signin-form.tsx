@@ -36,16 +36,15 @@ export function GoogleSignInForm() {
       // Call SignInWithGoogle, which might not return anything
       SignInWithGoogle()
       const signInData = await SignInWithGoogle()
-      console.log(`Signindata here : ${signInData}`);
 
 
-      setSuccessMessage('Successfully logged in!')
 
 
 
     } catch (error) {
       setErrorMessage('An error occurred while logging in. Please try again.')
     } finally {
+      setSuccessMessage('Successfully logged in!')
       setIsLoading(false)
     }
   }

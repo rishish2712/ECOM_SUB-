@@ -142,36 +142,6 @@ const CheckoutForm = () => {
         return;
       }
 
-      const res = await createOrder({
-        items,
-        shippingAddress,
-        expectedDeliveryDate: calculateFutureDate(
-          AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
-        ),
-        deliveryDateIndex,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        totalPrice,
-      });
-
-      if (!res.success) {
-        toast.error("Cart is empty", {
-          duration: 3000,
-          position: 'top-center',
-          style: {
-            background: '#FF3B30',
-            color: '#fff',
-            fontWeight: 'bold',
-            padding: '12px',
-            borderRadius: '8px',
-          },
-        });
-        setIsProcessing(false);
-        return;
-      }
-
       // Ensure Razorpay is loaded
       if (typeof window === 'undefined' || !window.Razorpay) {
         console.error('Razorpay SDK not loaded');
@@ -270,32 +240,32 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
       </body>
   
       `;
-      
-        const res = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            to: shippingAddress?.email,
-            subject: 'Payment Successful ',
-            text: 'We have successfully Placed Your Order!',
-            html: htmlContent,
-          }),
-        });
-        toast.success('Payment Successfully.', {
-          duration: 3000,
-          position: 'top-center',
-          style: {
-            background: '#000000',
-            color: '#FFFFFF',
-            fontWeight: 'bold',
-            padding: '12px',
-            borderRadius: '8px',
-          },
-        });
-        clearCart();
-        router.push('/')
+
+          const res = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              to: shippingAddress?.email,
+              subject: 'Payment Successful ',
+              text: 'We have successfully Placed Your Order!',
+              html: htmlContent,
+            }),
+          });
+          toast.success('Payment Successfully.', {
+            duration: 3000,
+            position: 'top-center',
+            style: {
+              background: '#000000',
+              color: '#FFFFFF',
+              fontWeight: 'bold',
+              padding: '12px',
+              borderRadius: '8px',
+            },
+          });
+          clearCart();
+          router.push('/')
         },
         prefill: {
           name: userId,
@@ -306,7 +276,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
           color: '#007bff',
         },
       };
-      
+
       const razorpay = new window.Razorpay(options);
       razorpay.open();
       setpaymentDone(true);
@@ -325,12 +295,12 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
         },
       });
     }
-    
+
     setIsProcessing(false);
-    
+
     if (paymentDone === true) {
       try {
-        
+
       } catch (error) {
         console.error('Error sending email:', error);
       }
