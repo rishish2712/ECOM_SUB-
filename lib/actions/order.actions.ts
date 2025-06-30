@@ -366,6 +366,7 @@ export const createOrder = async (clientSideCart: Cart) => {
       clientSideCart,
       session.user.id!
     )
+    console.log(session.user.id);
     return {
       success: true,
       message: 'Order placed successfully',
@@ -468,7 +469,7 @@ export async function getMyOrders({
     user: session?.user?.id,
   })
     .sort({ createdAt: 'desc' })
-    .skip(skipAmount)
+    // .skip(skipAmount)
     .limit(limit)
   const ordersCount = await Order.countDocuments({ user: session?.user?.id })
 

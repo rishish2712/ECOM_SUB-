@@ -1,4 +1,5 @@
 'use client'
+import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import {
@@ -43,7 +44,7 @@ import {
   DEFAULT_PAYMENT_METHOD,
 } from '@/lib/constants'
 import { toast } from 'react-hot-toast'
-import { createOrder } from '@/lib/actions/order.actions'
+import { createOrder, updateOrderToPaid } from '@/lib/actions/order.actions'
 import Script from 'next/script'
 
 declare global {
@@ -54,6 +55,7 @@ declare global {
 
 
 const CheckoutForm = () => {
+  const { data: session } = useSession();
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentDone, setpaymentDone] = useState(false);
   const router = useRouter()
@@ -120,7 +122,8 @@ const CheckoutForm = () => {
     setIsProcessing(true);
 
     try {
-      const userId = shippingAddress?.fullName; // ✅ Use fullName as userId
+      // const userId = shippingAddress?.fullName;
+      const userId = session?.user?.id;
 
       if (!userId) {
         console.error("❌ User name (fullName) is missing.");
@@ -192,7 +195,7 @@ const CheckoutForm = () => {
           paymentMethod,
           shippingAddress: {
             ...shippingAddress,
-            email: shippingAddress.email,
+            email: shippingAddress?.email,
           },
           expectedDeliveryDate: calculateFutureDate(
             AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
@@ -216,28 +219,94 @@ const CheckoutForm = () => {
         description: 'Test Transaction',
         order_id: order.razorpayOrderId,
         handler: async (response: any) => {
-          toast.success('Payment Successfully.', {
-            duration: 3000,
-            position: 'top-center',
-            style: {
-              background: '#000000',
-              color: '#FFFFFF',
-              fontWeight: 'bold',
-              padding: '12px',
-              borderRadius: '8px',
-            },
-          });
+          await updateOrderToPaid(order.orderId);
+          await updateOrderToPaid(order.razorpayOrderId);
+          const htmlContent = `
+          <body style="padding: 20px; text-align: center; background-color: #f4f4f4;">
+    <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; 
+                box-shadow: 0px 0px 10px rgba(0,0,0,0.1); text-align: center;">
+      
+                <div style="display: flex; justify-content: center;">
+        <img src="cid:logo" alt="Company Logo" style="width: auto; hight: auto; border-radius: 50%;">
+        </div>
+        
+        <h2 style="color: #28a745;">✅ Payment Successful! ✅</h2>
+        
+      <p style="font-size: 16px; color: #555;">Hello,</p>
+      
+      <p style="font-size: 16px; color: #555;">
+      Your payment of <strong>₹${totalPrice}</strong> has been successfully processed.
+      </p>
+      
+      <p style="font-size: 16px; color: #555;">
+      Your order 
+      <p>
+      <strong>
+      Your order includes (${items.length} items):<br>
+${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong>
+  </p> is now confirmed and will be shipped soon.
+      </p>
+      
+      <a href="${process.env.NEXT_PUBLIC_APP_URL}/" 
+      style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; 
+      background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+      View Order Details
+      </a>
+  
+      <p style="font-size: 14px; color: #777; margin-top: 20px;">
+      If you have any questions regarding your order, please contact our support team.
+      </p>
+  
+      <hr style="border: none; border-top: 1px solid #ddd;">
+      
+      <p style="font-size: 14px; color: #999;">
+      Thank you for shopping with <strong>LOKLBIZ</strong>!  
+      </p>
+      
+      <p style="font-size: 14px; color: #999;">
+      Need help? Contact us at <a href="mailto:loklbiz25@gmail.com" style="color: #007bff;">Customer Support</a>.
+      </p>
+      </div>
+      </body>
+  
+      `;
+      
+        const res = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            to: shippingAddress?.email,
+            subject: 'Payment Successful ',
+            text: 'We have successfully Placed Your Order!',
+            html: htmlContent,
+          }),
+        });
+        toast.success('Payment Successfully.', {
+          duration: 3000,
+          position: 'top-center',
+          style: {
+            background: '#000000',
+            color: '#FFFFFF',
+            fontWeight: 'bold',
+            padding: '12px',
+            borderRadius: '8px',
+          },
+        });
+        clearCart();
+        router.push('/')
         },
         prefill: {
           name: userId,
-          email: shippingAddress.email,
-          contact: shippingAddress.phone,
+          email: shippingAddress?.email,
+          contact: shippingAddress?.phone,
         },
         theme: {
           color: '#007bff',
         },
       };
-
+      
       const razorpay = new window.Razorpay(options);
       razorpay.open();
       setpaymentDone(true);
@@ -256,75 +325,12 @@ const CheckoutForm = () => {
         },
       });
     }
-
+    
     setIsProcessing(false);
-
+    
     if (paymentDone === true) {
       try {
-        const htmlContent = `
-          <body style="padding: 20px; text-align: center; background-color: #f4f4f4;">
-    <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; 
-                box-shadow: 0px 0px 10px rgba(0,0,0,0.1); text-align: center;">
-      
-      <div style="display: flex; justify-content: center;">
-        <img src="cid:logo" alt="Company Logo" style="width: auto; hight: auto; border-radius: 50%;">
-      </div>
-  
-      <h2 style="color: #28a745;">✅ Payment Successful! ✅</h2>
-  
-      <p style="font-size: 16px; color: #555;">Hello,</p>
-      
-      <p style="font-size: 16px; color: #555;">
-        Your payment of <strong>₹${totalPrice}</strong> has been successfully processed.
-      </p>
-  
-      <p style="font-size: 16px; color: #555;">
-        Your order 
-        <p>
-        <strong>
-        Your order includes (${items.length} items):<br>
-${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong>
-  </p> is now confirmed and will be shipped soon.
-      </p>
-  
-      <a href="${process.env.NEXT_PUBLIC_APP_URL}/account/orders/" 
-         style="display: inline-block; padding: 10px 20px; font-size: 16px; color: #fff; 
-                background-color: #007bff; text-decoration: none; border-radius: 5px; font-weight: bold;">
-        View Order Details
-      </a>
-  
-      <p style="font-size: 14px; color: #777; margin-top: 20px;">
-        If you have any questions regarding your order, please contact our support team.
-      </p>
-  
-      <hr style="border: none; border-top: 1px solid #ddd;">
-  
-      <p style="font-size: 14px; color: #999;">
-        Thank you for shopping with <strong>LOKLBIZ</strong>!  
-      </p>
-  
-      <p style="font-size: 14px; color: #999;">
-        Need help? Contact us at <a href="mailto:hamarabusiness24@gmail.com" style="color: #007bff;">Customer Support</a>.
-      </p>
-    </div>
-  </body>
-  
-        `;
-
-        const res = await fetch('/api/send-email', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            to: shippingAddress?.email,
-            subject: 'Payment Successful ',
-            text: 'We have successfully Placed Your Order!',
-            html: htmlContent,
-          }),
-        });
-        clearCart();
-        router.push('/')
+        
       } catch (error) {
         console.error('Error sending email:', error);
       }

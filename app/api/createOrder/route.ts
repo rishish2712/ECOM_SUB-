@@ -46,13 +46,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, message: 'Invalid order data' }, { status: 400 });
     }
 
-
-    let userObjectId;
-    if (mongoose.Types.ObjectId.isValid(userId)) {
-      userObjectId = new mongoose.Types.ObjectId(userId);
-    } else {
-      userObjectId = new mongoose.Types.ObjectId(); // Creates a dummy ObjectId
-    }
+    const userObjectId = new mongoose.Types.ObjectId(userId);
 
 
 
@@ -87,7 +81,8 @@ export async function POST(req: Request) {
         expectedDeliveryDate,
         shippingAddress,
         paymentStatus: 'Paid',
-        isPaid: true,
+        isPaid : false,
+        paidAt : new Date(),
         razorpayOrderId: razorpayOrder.id,
       });
 
