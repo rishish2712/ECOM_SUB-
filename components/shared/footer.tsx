@@ -50,17 +50,14 @@ export default function Footer() {
             <div className='space-y-4'>
               <h3 className='text-lg font-semibold mb-6'>ADDRESS</h3>
               <div className='space-y-2 text-gray-800'>
-                <p className='font-medium'>MISS. SURENA 
-                                          HOUSE NO 769 GROUND FLOOR 
-                                          TYPE A PKT 7 DDA FLATS, 
-                                          SEC A-6, A.P.S NARELA 
-                                          NEW DELHI- 110040
-                                          </p>
+                <p className='font-medium'>PKT 7 DDA FLATS, SEC A-6, NARELA
+                  NEW DELHI- 110040
+                </p>
               </div>
             </div>
 
             {/* Help Column */}
-            <div className='space-y-4'>
+            <div className='space-y-3'>
               <h3 className='text-lg font-semibold mb-6'>HELP</h3>
               <div className='space-y-3 text-gray-800'>
                 <a href='tel:9148783991' className='block text-xl font-medium hover:text-black transition-colors'>
@@ -70,38 +67,26 @@ export default function Footer() {
                   loklbiz25@gmail.com
                 </a>
               </div>
-
-              <div className='mt-8'>
-                <h4 className='text-lg font-semibold mb-4'>FOLLOW US</h4>
-                <div className='flex space-x-4'>
-                  <a href='https://youtube.com/@loklbiz' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
-                    <Youtube className='w-5 h-5 text-black' />
-                  </a>
-                  <a href='https://fb.com/loklbiz' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
-                    <Facebook className='w-5 h-5 text-black' />
-                  </a>
-                  <a href='https://www.instagram.com/loklbizz/' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
-                    <Instagram className='w-5 h-5 text-black' />
-                  </a>
-                  <a href='https://wa.me/919148783991' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
-                    <MessageCircle className='w-5 h-5 text-black' />
-                  </a>
-                  <a href='mailto:loklbiz25@gmail.com' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
-                    <Mail className='w-5 h-5 text-black' />
-                  </a>
-                </div>
-              </div>
             </div>
 
-            {/* Return Policy Column */}
-            <div className='space-y-4'>
-              <div className='flex flex-col items-center text-center'>
-                <div className='w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center mb-4'>
-                  <PackageOpen className='w-10 h-10 text-white' />
-                </div>
-                <h3 className='text-lg font-semibold mb-2'>Easy Exchange</h3>
-                <h3 className='text-lg font-semibold mb-2'>&</h3>
-                <h3 className='text-lg font-semibold'>14 Days Return Policy</h3>
+            <div className='mt-1'>
+              <h4 className='text-lg font-semibold mb-4'>FOLLOW US</h4>
+              <div className='flex space-x-15 mr-4 mt-8'>
+                <a href='https://youtube.com/@loklbiz' target='_blank' rel='noopener noreferrer' className='w-15 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
+                  <Youtube className='w-5 h-5 text-black' />
+                </a>
+                <a href='https://fb.com/loklbiz' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
+                  <Facebook className='w-5 h-5 text-black' />
+                </a>
+                <a href='https://www.instagram.com/loklbizz/' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
+                  <Instagram className='w-5 h-5 text-black' />
+                </a>
+                <a href='https://wa.me/919148783991' target='_blank' rel='noopener noreferrer' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
+                  <MessageCircle className='w-5 h-5 text-black' />
+                </a>
+                <a href='mailto:loklbiz25@gmail.com' className='w-10 h-10 bg-white rounded-full flex items-center justify-center hover:bg-gray-200 transition-colors'>
+                  <Mail className='w-5 h-5 text-black' />
+                </a>
               </div>
             </div>
           </div>
