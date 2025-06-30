@@ -142,36 +142,6 @@ const CheckoutForm = () => {
         return;
       }
 
-      const res = await createOrder({
-        items,
-        shippingAddress,
-        expectedDeliveryDate: calculateFutureDate(
-          AVAILABLE_DELIVERY_DATES[deliveryDateIndex!].daysToDeliver
-        ),
-        deliveryDateIndex,
-        paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        totalPrice,
-      });
-
-      if (!res.success) {
-        toast.error("Cart is empty", {
-          duration: 3000,
-          position: 'top-center',
-          style: {
-            background: '#FF3B30',
-            color: '#fff',
-            fontWeight: 'bold',
-            padding: '12px',
-            borderRadius: '8px',
-          },
-        });
-        setIsProcessing(false);
-        return;
-      }
-
       // Ensure Razorpay is loaded
       if (typeof window === 'undefined' || !window.Razorpay) {
         console.error('Razorpay SDK not loaded');
@@ -220,7 +190,6 @@ const CheckoutForm = () => {
         order_id: order.razorpayOrderId,
         handler: async (response: any) => {
           await updateOrderToPaid(order.orderId);
-          await updateOrderToPaid(order.razorpayOrderId);
           const htmlContent = `
           <body style="padding: 20px; text-align: center; background-color: #f4f4f4;">
     <div style="max-width: 500px; background: white; padding: 20px; margin: auto; border-radius: 8px; 
