@@ -34,9 +34,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Email is required' }, { status: 400 });
   }
 
-
-
-  console.log(` Verification code generated for ${email}: ${verificationCode}`);
   console.log(' Current verification codes:', Object.fromEntries(verificationCodes));
 
   const transporter = nodemailer.createTransport({

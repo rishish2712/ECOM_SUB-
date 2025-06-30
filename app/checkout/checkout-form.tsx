@@ -124,6 +124,7 @@ const CheckoutForm = () => {
     try {
       // const userId = shippingAddress?.fullName;
       const userId = session?.user?.id;
+      const userName = session?.user?.name;
 
       if (!userId) {
         console.error("❌ User name (fullName) is missing.");
@@ -154,7 +155,7 @@ const CheckoutForm = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId, // ✅ Using Full Name as userId
+          userId,
           amount: Math.round(totalPrice * 100),
           currency: "INR",
           items,
@@ -267,9 +268,9 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
         router.push('/')
         },
         prefill: {
-          name: userId,
+          name: shippingAddress?.fullName,
           email: shippingAddress?.email,
-          contact: shippingAddress?.phone,
+          // contact: null,
         },
         theme: {
           color: '#007bff',
@@ -296,15 +297,6 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
     }
     
     setIsProcessing(false);
-    
-    if (paymentDone === true) {
-      try {
-        
-      } catch (error) {
-        console.error('Error sending email:', error);
-      }
-
-    }
 
   };
 
