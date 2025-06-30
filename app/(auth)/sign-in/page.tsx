@@ -22,7 +22,7 @@ export default async function SignIn(props: {
 }) {
   const searchParams = await props.searchParams
 
-  const { callbackUrl = '/' } = searchParams
+  const { callbackUrl = 'https://www.loklbiz.com/api/auth/callback/google flowName=GeneralOAuthFlow' } = searchParams
 
   const session = await auth()
   if (session) {
@@ -40,9 +40,9 @@ export default async function SignIn(props: {
             <CredentialsSignInForm />
           </div>
           <SeparatorWithOr />
-            <div className='mt-4'>
-              <GoogleSignInForm />
-            </div>
+          <div className='mt-4'>
+            <GoogleSignInForm />
+          </div>
         </CardContent>
       </Card>
       <SeparatorWithOr>New to {APP_NAME}?</SeparatorWithOr>
