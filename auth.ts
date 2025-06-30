@@ -32,7 +32,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
         Google({
             allowDangerousEmailAccountLinking: true,
-          }),
+        }),
         CredentialsProvider({
             credentials: {
                 email: {
