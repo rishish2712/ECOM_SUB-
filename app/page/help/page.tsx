@@ -141,7 +141,7 @@ export default function HelpPage() {
             label: 'WhatsApp',
           },
           {
-            href: 'https://instagram.com/loklbiz',
+            href: 'https://www.instagram.com/loklbizz/',
             bg: 'bg-pink-500',
             icon: <Instagram size={18} />,
             label: 'Instagram',

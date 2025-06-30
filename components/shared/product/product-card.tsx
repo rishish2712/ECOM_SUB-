@@ -92,24 +92,21 @@ const ProductCard = ({
     </div>
   )
   return hideBorder ? (
-    <div className='flex flex-col'>
+    <div className='flex flex-col border border-gray-300 rounded-lg'>
       <ProductImage />
-      {!hideDetails && <AddButton />} (
-        <>
-          <div className='p-3 flex-1 text-center'>
-            <ProductDetails />
-          </div>
-        </>
-      )
+      {!hideDetails && <AddButton />}
+      <div className='p-3 flex-1 text-center'>
+        <ProductDetails />
+      </div>
     </div>
   ) : (
-    <Card className='flex flex-col  '>
+    <Card className='flex flex-col border border-gray-300 rounded-lg'>
       <CardHeader className='p-3'>
         <ProductImage />
       </CardHeader>
       {!hideDetails && (
         <>
-          <CardContent className='p-3 flex-1  text-center'>
+          <CardContent className='p-3 flex-1 text-center'>
             <ProductDetails />
           </CardContent>
           <CardFooter className='p-3'>{!hideAddToCart && <AddButton />}</CardFooter>

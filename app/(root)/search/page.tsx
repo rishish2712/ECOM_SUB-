@@ -113,10 +113,10 @@ export default async function SearchPage(props: {
     price,
     rating,
     page: Number(page),
-    sort,
+    sort,   
   })
   return (
-    <div>
+    <div className="min-h-screen">
       <div className='mb-2 py-2 md:border-b flex-between flex-col md:flex-row '>
         <div className='flex items-center'>
           {data.totalProducts === 0
@@ -146,6 +146,7 @@ export default async function SearchPage(props: {
             </Button>
           ) : null}
         </div>
+        
         <div>
           <ProductSortSelector
             sortOrders={sortOrders}
@@ -153,110 +154,236 @@ export default async function SearchPage(props: {
             params={params}
           />
         </div>
+        
       </div>
+      
       <div className='bg-card grid md:grid-cols-5 md:gap-4'>
-        <CollapsibleOnMobile title='Filters'>
-          <div className='space-y-4'>
-            <div>
-              <div className='font-bold'>Department</div>
-              <ul>
-                <li>
-                  <Link
-                    className={`${
-                      ('all' === category || '' === category) && 'text-primary'
-                    }`}
-                    href={getFilterUrl({ category: 'all', params })}
-                  >
-                    All
-                  </Link>
-                </li>
-                {categories.map((c: string) => (
-                  <li key={c}>
-                    <Link
-                      className={`${c === category && 'text-primary'}`}
-                      href={getFilterUrl({ category: c, params })}
-                    >
-                      {c}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className='font-bold'>Price</div>
-              <ul>
-                <li>
-                  <Link
-                    className={`${'all' === price && 'text-primary'}`}
-                    href={getFilterUrl({ price: 'all', params })}
-                  >
-                    All
-                  </Link>
-                </li>
-                {prices.map((p) => (
-                  <li key={p.value}>
-                    <Link
-                      href={getFilterUrl({ price: p.value, params })}
-                      className={`${p.value === price && 'text-primary'}`}
-                    >
-                      {p.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <div className='font-bold'>Customer Review</div>
-              <ul>
-                <li>
-                  <Link
-                    href={getFilterUrl({ rating: 'all', params })}
-                    className={`${'all' === rating && 'text-primary'}`}
-                  >
-                    All
-                  </Link>
-                </li>
-
-                <li>
-                  <Link
-                    href={getFilterUrl({ rating: '4', params })}
-                    className={`${'4' === rating && 'text-primary'}`}
-                  >
-                    <div className='flex'>
-                      <Rating size={4} rating={4} /> & Up
-                    </div>
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <div className='font-bold'>Tag</div>
-              <ul>
-                <li>
-                  <Link
-                    className={`${
-                      ('all' === tag || '' === tag) && 'text-primary'
-                    }`}
-                    href={getFilterUrl({ tag: 'all', params })}
-                  >
-                    All
-                  </Link>
-                </li>
-                {tags.map((t: string) => (
-                  <li key={t}>
-                    <Link
-                      className={`${toSlug(t) === tag && 'text-primary'}`}
-                      href={getFilterUrl({ tag: t, params })}
-                    >
-                      {t}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Sticky Sidebar - Only on desktop */}
+        <div className="hidden md:block">
+          <div className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto">
+            <CollapsibleOnMobile title='Filters'>
+              <div className='space-y-4 pr-4'>
+                <div>
+                  <div className='font-bold'>Department</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link
+                        className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                          ('all' === category || '' === category) && 'text-primary bg-primary/10'
+                        }`}
+                        href={getFilterUrl({ category: 'all', params })}
+                      >
+                        All
+                      </Link>
+                    </li>
+                    {categories.map((c: string) => (
+                      <li key={c}>
+                        <Link
+                          className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                            c === category && 'text-primary bg-primary/10'
+                          }`}
+                          href={getFilterUrl({ category: c, params })}
+                        >
+                          {c}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <div className='font-bold'>Price</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link
+                        className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                          'all' === price && 'text-primary bg-primary/10'
+                        }`}
+                        href={getFilterUrl({ price: 'all', params })}
+                      >
+                        All
+                      </Link>
+                    </li>
+                    {prices.map((p) => (
+                      <li key={p.value}>
+                        <Link
+                          href={getFilterUrl({ price: p.value, params })}
+                          className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                            p.value === price && 'text-primary bg-primary/10'
+                          }`}
+                        >
+                          {p.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div>
+                  <div className='font-bold'>Customer Review</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link
+                        href={getFilterUrl({ rating: 'all', params })}
+                        className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                          'all' === rating && 'text-primary bg-primary/10'
+                        }`}
+                      >
+                        All
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href={getFilterUrl({ rating: '4', params })}
+                        className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                          '4' === rating && 'text-primary bg-primary/10'
+                        }`}
+                      >
+                        <div className='flex items-center'>
+                          <Rating size={4} rating={4} /> <span className="ml-1">& Up</span>
+                        </div>
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div>
+                  <div className='font-bold'>Tag</div>
+                  <ul className="space-y-1">
+                    <li>
+                      <Link
+                        className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                          ('all' === tag || '' === tag) && 'text-primary bg-primary/10'
+                        }`}
+                        href={getFilterUrl({ tag: 'all', params })}
+                      >
+                        All
+                      </Link>
+                    </li>
+                    {tags.map((t: string) => (
+                      <li key={t}>
+                        <Link
+                          className={`block py-1 px-2 rounded hover:bg-gray-100 ${
+                            toSlug(t) === tag && 'text-primary bg-primary/10'
+                          }`}
+                          href={getFilterUrl({ tag: t, params })}
+                        >
+                          {t}
+                        </Link>
+                        </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CollapsibleOnMobile>
           </div>
-        </CollapsibleOnMobile>
+        </div>
 
+        {/* Mobile Filters - Collapsible */}
+        <div className="md:hidden col-span-full">
+          <CollapsibleOnMobile title='Filters'>
+            <div className='space-y-4'>
+              <div>
+                <div className='font-bold'>Department</div>
+                <ul>
+                  <li>
+                    <Link
+                      className={`${
+                        ('all' === category || '' === category) && 'text-primary'
+                      }`}
+                      href={getFilterUrl({ category: 'all', params })}
+                    >
+                      All
+                    </Link>
+                  </li>
+                  {categories.map((c: string) => (
+                    <li key={c}>
+                      <Link
+                        className={`${c === category && 'text-primary'}`}
+                        href={getFilterUrl({ category: c, params })}
+                      >
+                        {c}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className='font-bold'>Price</div>
+                <ul>
+                  <li>
+                    <Link
+                      className={`${'all' === price && 'text-primary'}`}
+                      href={getFilterUrl({ price: 'all', params })}
+                    >
+                      All
+                    </Link>
+                  </li>
+                  {prices.map((p) => (
+                    <li key={p.value}>
+                      <Link
+                        href={getFilterUrl({ price: p.value, params })}
+                        className={`${p.value === price && 'text-primary'}`}
+                      >
+                        {p.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className='font-bold'>Customer Review</div>
+                <ul>
+                  <li>
+                    <Link
+                      href={getFilterUrl({ rating: 'all', params })}
+                      className={`${'all' === rating && 'text-primary'}`}
+                    >
+                      All
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href={getFilterUrl({ rating: '4', params })}
+                      className={`${'4' === rating && 'text-primary'}`}
+                    >
+                      <div className='flex'>
+                        <Rating size={4} rating={4} /> & Up
+                      </div>
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <div className='font-bold'>Tag</div>
+                <ul>
+                  <li>
+                    <Link
+                      className={`${
+                        ('all' === tag || '' === tag) && 'text-primary'
+                      }`}
+                      href={getFilterUrl({ tag: 'all', params })}
+                    >
+                      All
+                    </Link>
+                  </li>
+                  {tags.map((t: string) => (
+                    <li key={t}>
+                      <Link
+                        className={`${toSlug(t) === tag && 'text-primary'}`}
+                        href={getFilterUrl({ tag: t, params })}
+                      >
+                        {t}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </CollapsibleOnMobile>
+        </div>
+
+        {/* Results Section - Scrollable normally */}
         <div className='md:col-span-4 space-y-4'>
           <div>
             <div className='font-bold text-xl'>Results</div>

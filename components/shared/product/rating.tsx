@@ -23,7 +23,7 @@ export default function Rating({
       {[...Array(fullStars)].map((_, i) => (
         <Star
           key={`full-${i}`}
-          className={`w-${size} h-${size} fill-amber-300 text-primary`}
+          className={`w-${size} h-${size} fill-orange-400 text-primary`}
         />
       ))}
       {partialStar > 0 && (

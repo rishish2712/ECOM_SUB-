@@ -347,7 +347,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
         {!isAddressSelected && (
           <div className='border-b mb-4'>
             <Button
-              className='rounded-full w-full bg-amber-300 hover:bg-amber-400'
+              className='rounded-full w-full bg-orange-400 hover:bg-orange-500 text-white'
               onClick={handleSelectShippingAddress}
             >
               Ship to this address
@@ -361,7 +361,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
         {isAddressSelected && !isPaymentMethodSelected && (
           <div className=' mb-4'>
             <Button
-              className='rounded-full w-full bg-amber-300 hover:bg-amber-400'
+              className='rounded-full w-full bg-orange-400 hover:bg-orange-500'
               onClick={handleSelectPaymentMethod}
             >
               Use this payment method
@@ -376,7 +376,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
         )}
         {isPaymentMethodSelected && isAddressSelected && (
           <div>
-            <Button onClick={handlePlaceOrder} className='rounded-full w-full bg-amber-300 hover:bg-amber-400'>
+            <Button onClick={handlePlaceOrder} className='rounded-full w-full bg-orange-400 hover:bg-orange-500 text-white'>
               Place Your Order
             </Button>
             <p className='text-xs text-center py-2'>
@@ -617,7 +617,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
                       <CardFooter className='  p-4'>
                         <Button
                           type='submit'
-                          className='rounded-full font-bold bg-amber-300 hover:bg-amber-400'
+                          className='rounded-full bg-orange-400 hover:bg-orange-500 text-white'
                         >
                           Ship to this address
                         </Button>
@@ -682,7 +682,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
                   <CardFooter className='p-4'>
                     <Button
                       onClick={handleSelectPaymentMethod}
-                      className='rounded-full font-bold bg-amber-300 hover:bg-amber-400'
+                      className='rounded-full text-white bg-orange-400 hover:bg-orange-500'
                     >
                       Use this payment method
                     </Button>
@@ -886,7 +886,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
 
               <Card className='hidden md:block '>
                 <CardContent className='p-4 flex flex-col md:flex-row justify-between items-center gap-3'>
-                  <Button onClick={handlePlaceOrder} className='rounded-full bg-amber-300 hover:bg-amber-400'>
+                  <Button onClick={handlePlaceOrder} className='rounded-full text-white bg-orange-400 hover:bg-orange-500'>
                     {isProcessing ? 'Processing...' : 'Place Your Order'}
                   </Button>
                   <div className='flex-1'>
