@@ -438,7 +438,7 @@ ${items.map((item, index) => `${index + 1}. ${item.name}`).join("<br>")}</strong
 
   return (
     <main className='max-w-6xl mx-auto highlight-link'>
-      <Script src='http://checkout.razorpay.com/v1/checkout.js' />
+      <Script src='https://checkout.razorpay.com/v1/checkout.js' />
       <div className='grid md:grid-cols-4 gap-6'>
         <div className='md:col-span-3'>
           {/* shipping address */}
