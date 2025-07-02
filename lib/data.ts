@@ -1089,6 +1089,10 @@ const data: Data = {
       name: 'Help',
       herf: '/page/help',
     },
+    {
+      name: 'Register as Seller',
+      herf: 'https://forms.gle/cx3tDbjtzuXdpCTKA'
+    }
   ],
   carousels: [
     {
@@ -1113,7 +1117,7 @@ const data: Data = {
       isPublished: true,
     },
   ],
-  settings : [],
+  settings: [],
   products,
   users,
   reviews

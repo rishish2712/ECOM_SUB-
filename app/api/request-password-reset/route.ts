@@ -40,8 +40,7 @@ export async function POST(req: Request) {
           <div style="font-family: Arial, sans-serif; text-align: center;">
     <h2>🔒 Reset Your Password</h2>
     <p>Hello,</p>
-    <p>We received a request to reset your password. Use the code below to proceed:</p>
-    <h3 style="color: blue; font-size: 24px;">${resetToken}</h3>
+    <p>We received a request to reset your password.If this is not you then communicate to support team. </p>
     <p>Or click the button below:</p>
     <a href="${process.env.NEXT_PUBLIC_APP_URL}/reset-password?token=${resetToken}"
        style="display: inline-block; padding: 12px 24px; color: white; background-color: #007bff; 

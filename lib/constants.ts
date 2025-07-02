@@ -48,8 +48,7 @@ export const AVAILABLE_DELIVERY_DATES = [
   },
 ]
 
-export const SERVER_URL =
-  process.env.NEXT_PUBLIC_SERVER_URL || 'http://loklbiz.com'
+export const SERVER_URL =  process.env.NEXT_PUBLIC_SERVER_URL || 'http://loklbiz.com'
 
 export const SENDER_EMAIL = process.env.SENDER_EMAIL || 'Loklbiz25@gmail.com'
 export const SENDER_NAME = process.env.SENDER_NAME || 'LoklBiz'
